@@ -272,5 +272,98 @@ $(function () {
       const btn = document.getElementById('lang-toggle-btn');
       if (btn) btn.textContent = _t('lang.toggle');
     });
+
+    // 铃铛：自动注入红点 + 绑定点击
+    const $bellBtn = $('nav .fa-bell').first().closest('button, a');
+    if ($bellBtn.length) {
+      $bellBtn.css('position', 'relative');
+      if (!$bellBtn.find('.nlb-bell-dot').length) {
+        $bellBtn.append('<span class="nlb-bell-dot" style="position:absolute;top:6px;right:6px;width:7px;height:7px;background:#ef4444;border-radius:50%;pointer-events:none;"></span>');
+      }
+      $bellBtn.off('click.bell').on('click.bell', function(e) {
+        e.stopPropagation();
+        openNlbNotifications();
+      });
+    }
   }
 });
+
+// ── 全站通知面板 ──
+const NLB_NOTICES = [
+  { tag:'新书', tagColor:'#2563eb', date:'2025-03-15', unread:true,
+    title:'3月新书上架：128本中英文新书已入库',
+    body:'本月共新增128本中英文电子书，涵盖历史人文、科幻小说、儿童绘本等多个分类。其中中文新书82本，英文新书46本。所有新书即日起可免费借阅，每位会员借阅期21天，可续借1次。' },
+  { tag:'提醒', tagColor:'#f97316', date:'2025-03-12', unread:true,
+    title:'《活着》借阅即将到期，还有2天',
+    body:'您借阅的《活着》（余华 著）将于2025年3月14日到期。如需继续阅读，请在到期前前往"我的书架"点击续借。每本书可续借1次，延长21天。' },
+  { tag:'活动', tagColor:'#16a34a', date:'2025-03-10', unread:false,
+    title:'NLB阅读节：4月线下活动报名开启',
+    body:'NLB阅读节将于2025年4月12日至4月20日在国家图书馆（维多利亚街）举办。活动包括作者见面会、读书分享会、儿童阅读工作坊等多项精彩内容。报名免费，名额有限，请尽早完成报名。' },
+  { tag:'系统', tagColor:'#6b7280', date:'2025-03-08', unread:false,
+    title:'系统维护通知：3月20日凌晨2-4时暂停服务',
+    body:'为提升平台稳定性，NLB eReads将于2025年3月20日凌晨2:00至4:00进行系统维护。维护期间平台将暂停所有服务。已下载的离线书籍不受影响，可正常阅读。如有疑问请联系客服热线 6332 3255。' },
+];
+
+function openNlbNoticeDetail(idx) {
+  const n = NLB_NOTICES[idx];
+  if (!n) return;
+  n.unread = false;
+  const div = document.createElement('div');
+  div.style.cssText = 'position:fixed;inset:0;background:rgba(15,23,42,.5);z-index:999999;display:flex;align-items:center;justify-content:center;padding:16px;';
+  div.innerHTML = `
+    <div style="background:#fff;border-radius:18px;width:100%;max-width:360px;overflow:hidden;box-shadow:0 24px 64px rgba(0,0,0,.25);">
+      <div style="padding:14px 16px;border-bottom:1px solid #f1f5f9;display:flex;align-items:center;justify-content:space-between;">
+        <div style="display:flex;align-items:center;gap:8px;">
+          <span style="background:${n.tagColor};color:#fff;font-size:11px;padding:2px 8px;border-radius:4px;font-weight:600;">${n.tag}</span>
+          <span style="font-size:11px;color:#94a3b8;">${n.date}</span>
+        </div>
+        <button onclick="this.closest('[style*=inset]').remove()" style="background:none;border:none;cursor:pointer;color:#94a3b8;font-size:20px;line-height:1;padding:0 4px;">×</button>
+      </div>
+      <div style="padding:18px 16px;">
+        <h3 style="font-size:14px;font-weight:600;color:#1e293b;line-height:1.5;margin:0 0 10px;">${n.title}</h3>
+        <p style="font-size:13px;color:#64748b;line-height:1.7;margin:0;">${n.body}</p>
+      </div>
+      <div style="padding:10px 16px 16px;">
+        <button onclick="this.closest('[style*=inset]').remove()" style="width:100%;padding:10px;border:1px solid #e2e8f0;border-radius:12px;background:#fff;font-size:13px;color:#374151;cursor:pointer;font-family:inherit;">关闭</button>
+      </div>
+    </div>`;
+  div.addEventListener('click', function(e){ if (e.target === div) div.remove(); });
+  document.body.appendChild(div);
+}
+
+function openNlbNotifications() {
+  if (document.getElementById('nlb-notif-panel')) return;
+  const panel = document.createElement('div');
+  panel.id = 'nlb-notif-panel';
+  panel.style.cssText = 'position:fixed;top:58px;right:16px;width:320px;max-width:calc(100vw - 32px);background:#fff;border-radius:16px;box-shadow:0 8px 40px rgba(0,0,0,.18);z-index:99990;overflow:hidden;';
+
+  const rows = NLB_NOTICES.map((n, i) => `
+    <div onclick="openNlbNoticeDetail(${i})" style="padding:12px 16px;border-bottom:1px solid #f8fafc;cursor:pointer;background:${n.unread ? '#eff6ff' : '#fff'};"
+      onmouseenter="this.style.background='#f1f5f9'" onmouseleave="this.style.background='${n.unread ? '#eff6ff' : '#fff'}'">
+      <div style="display:flex;align-items:center;gap:8px;margin-bottom:4px;">
+        <span style="background:${n.tagColor};color:#fff;font-size:11px;padding:1px 7px;border-radius:4px;font-weight:600;">${n.tag}</span>
+        <span style="font-size:11px;color:#94a3b8;">${n.date}</span>
+        ${n.unread ? '<span style="margin-left:auto;width:7px;height:7px;background:#ef4444;border-radius:50%;flex-shrink:0;"></span>' : ''}
+      </div>
+      <p style="font-size:13px;color:${n.unread ? '#1e293b' : '#374151'};font-weight:${n.unread ? '500' : '400'};line-height:1.4;margin:0;">${n.title}</p>
+    </div>`).join('');
+
+  panel.innerHTML = `
+    <div style="padding:14px 16px 10px;border-bottom:1px solid #f1f5f9;display:flex;align-items:center;justify-content:space-between;">
+      <span style="font-size:14px;font-weight:700;color:#1e293b;">消息通知</span>
+      <button onclick="document.getElementById('nlb-notif-panel').remove()" style="background:none;border:none;cursor:pointer;color:#94a3b8;font-size:20px;line-height:1;padding:0 4px;">×</button>
+    </div>
+    <div style="max-height:380px;overflow-y:auto;">${rows}</div>
+    <div style="padding:10px 16px;border-top:1px solid #f1f5f9;text-align:center;">
+      <button onclick="NLB_NOTICES.forEach(n=>n.unread=false);document.getElementById('nlb-notif-panel').remove();document.querySelectorAll('.nlb-bell-dot').forEach(d=>d.remove())"
+        style="font-size:12px;color:#0f4c81;background:none;border:none;cursor:pointer;font-family:inherit;">全部已读</button>
+    </div>`;
+
+  document.body.appendChild(panel);
+  setTimeout(() => {
+    document.addEventListener('click', function handler(e) {
+      const p = document.getElementById('nlb-notif-panel');
+      if (p && !p.contains(e.target)) { p.remove(); document.removeEventListener('click', handler); }
+    });
+  }, 0);
+}

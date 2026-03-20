@@ -28,13 +28,12 @@
   .iframe-wrapper {
     margin: 0 24px;
     border-radius: 16px;
-    overflow: hidden;
     border: 1px solid #1e293b;
     box-shadow: 0 25px 60px rgba(0,0,0,0.5);
     background: #fff;
   }
   .iframe-wrapper iframe {
-    width: 100%; display: block; border: none;
+    width: 100%; display: block; border: none; border-radius: 16px;
   }
   /* Top nav bar */
   .top-nav {
@@ -118,7 +117,7 @@
     <span class="section-desc">login.html</span>
   </div>
   <div class="iframe-wrapper">
-    <iframe src="login.html" height="700" scrolling="auto"></iframe>
+    <iframe src="login.html" height="700" scrolling="auto" onload="autoHeight(this)"></iframe>
   </div>
 </div>
 
@@ -130,7 +129,7 @@
     <span class="section-desc">home.html</span>
   </div>
   <div class="iframe-wrapper">
-    <iframe src="home.html" height="900" scrolling="auto"></iframe>
+    <iframe src="home.html" height="1300" scrolling="auto" onload="autoHeight(this)"></iframe>
   </div>
 </div>
 
@@ -142,7 +141,7 @@
     <span class="section-desc">search.html</span>
   </div>
   <div class="iframe-wrapper">
-    <iframe src="search.html" height="900" scrolling="auto"></iframe>
+    <iframe src="search.html" height="900" scrolling="auto" onload="autoHeight(this)"></iframe>
   </div>
 </div>
 
@@ -154,7 +153,7 @@
     <span class="section-desc">book-detail.html</span>
   </div>
   <div class="iframe-wrapper">
-    <iframe src="book-detail.html" height="900" scrolling="auto"></iframe>
+    <iframe src="book-detail.html" height="900" scrolling="auto" onload="autoHeight(this)"></iframe>
   </div>
 </div>
 
@@ -166,7 +165,7 @@
     <span class="section-desc">reading.html</span>
   </div>
   <div class="iframe-wrapper">
-    <iframe src="reading.html" height="800" scrolling="auto"></iframe>
+    <iframe src="reading.html" height="800" scrolling="auto" onload="autoHeight(this)"></iframe>
   </div>
 </div>
 
@@ -178,7 +177,7 @@
     <span class="section-desc">bookshelf.html</span>
   </div>
   <div class="iframe-wrapper">
-    <iframe src="bookshelf.html" height="900" scrolling="auto"></iframe>
+    <iframe src="bookshelf.html" height="900" scrolling="auto" onload="autoHeight(this)"></iframe>
   </div>
 </div>
 
@@ -190,7 +189,7 @@
     <span class="section-desc">profile.html</span>
   </div>
   <div class="iframe-wrapper">
-    <iframe src="profile.html" height="900" scrolling="auto"></iframe>
+    <iframe src="profile.html" height="900" scrolling="auto" onload="autoHeight(this)"></iframe>
   </div>
 </div>
 
@@ -202,7 +201,7 @@
     <span class="section-desc">help.html</span>
   </div>
   <div class="iframe-wrapper">
-    <iframe src="help.html" height="900" scrolling="auto"></iframe>
+    <iframe src="help.html" height="900" scrolling="auto" onload="autoHeight(this)"></iframe>
   </div>
 </div>
 
@@ -214,7 +213,7 @@
     <span class="section-desc">devices.html</span>
   </div>
   <div class="iframe-wrapper">
-    <iframe src="devices.html" height="900" scrolling="auto"></iframe>
+    <iframe src="devices.html" height="900" scrolling="auto" onload="autoHeight(this)"></iframe>
   </div>
 </div>
 
@@ -226,7 +225,7 @@
     <span class="section-desc">ai-chat.html</span>
   </div>
   <div class="iframe-wrapper">
-    <iframe src="ai-chat.html" height="700" scrolling="auto"></iframe>
+    <iframe src="ai-chat.html" height="700" scrolling="auto" onload="autoHeight(this)"></iframe>
   </div>
 </div>
 
@@ -237,6 +236,14 @@
 
 <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
 <script>
+// 自动撑高 iframe，使内容完整显示，不截断
+function autoHeight(iframe) {
+  try {
+    const h = iframe.contentDocument.body.scrollHeight;
+    if (h && h > 400) iframe.style.height = h + 'px';
+  } catch(e) {}
+}
+
 // 页面路由 → section ID 映射
 const PAGE_SECTION = {
   login: 's1', home: 's2', search: 's3',

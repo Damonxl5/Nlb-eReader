@@ -66,9 +66,8 @@
         </div>
       </div>
       <div class="flex items-center gap-3 flex-shrink-0">
-        <button class="relative p-2 text-gray-500 hover:text-primary transition">
+        <button class="relative p-2 text-gray-500 hover:text-primary transition" onclick="openNlbNotifications()">
           <i class="fas fa-bell text-lg"></i>
-          <span class="absolute top-1 right-1 w-2 h-2 bg-red-500 rounded-full"></span>
         </button>
         <div class="flex items-center gap-2 cursor-pointer hover:bg-gray-50 rounded-xl px-2 py-1.5 transition" data-nav="profile">
           <div class="w-8 h-8 rounded-full flex items-center justify-center" style="background:#0f4c81">
@@ -423,7 +422,8 @@
         <div class="announce-item flex items-start gap-3 p-3 bg-blue-50 rounded-xl cursor-pointer hover:bg-blue-100 transition"
           data-tag="新书" data-date="2025-03-15"
           data-title="3月新书上架：128本中英文新书已入库"
-          data-body="本月共新增128本中英文电子书，涵盖历史人文、科幻小说、儿童绘本等多个分类。其中中文新书82本，英文新书46本。所有新书即日起可免费借阅，每位会员借阅期21天，可续借1次。">
+          data-body="本月共新增128本中英文电子书，涵盖历史人文、科幻小说、儿童绘本等多个分类。其中中文新书82本，英文新书46本。所有新书即日起可免费借阅，每位会员借阅期21天，可续借1次。"
+          onclick="openAnnounce(this)">
           <span class="bg-blue-600 text-white text-xs px-2 py-0.5 rounded-md flex-shrink-0 mt-0.5">新书</span>
           <div class="flex-1 min-w-0">
             <p class="text-sm font-medium text-gray-800">3月新书上架：128本中英文新书已入库</p>
@@ -434,7 +434,8 @@
         <div class="announce-item flex items-start gap-3 p-3 hover:bg-gray-50 rounded-xl cursor-pointer transition"
           data-tag="活动" data-date="2025-03-10"
           data-title="NLB阅读节：4月线下活动报名开启"
-          data-body="NLB阅读节将于2025年4月12日至4月20日在国家图书馆（维多利亚街）举办。活动包括作者见面会、读书分享会、儿童阅读工作坊等多项精彩内容。报名免费，名额有限，请尽早通过NLB官网或本平台完成报名。">
+          data-body="NLB阅读节将于2025年4月12日至4月20日在国家图书馆（维多利亚街）举办。活动包括作者见面会、读书分享会、儿童阅读工作坊等多项精彩内容。报名免费，名额有限，请尽早通过NLB官网或本平台完成报名。"
+          onclick="openAnnounce(this)">
           <span class="bg-green-600 text-white text-xs px-2 py-0.5 rounded-md flex-shrink-0 mt-0.5">活动</span>
           <div class="flex-1 min-w-0">
             <p class="text-sm font-medium text-gray-800">NLB阅读节：4月线下活动报名开启</p>
@@ -445,7 +446,8 @@
         <div class="announce-item flex items-start gap-3 p-3 hover:bg-gray-50 rounded-xl cursor-pointer transition"
           data-tag="提醒" data-date="2025-03-08"
           data-title="系统维护通知：3月20日凌晨2-4时暂停服务"
-          data-body="为提升平台稳定性及用户体验，NLB eReads将于2025年3月20日凌晨2:00至4:00进行系统维护。维护期间平台将暂停所有服务，包括借阅、续借、推送及下载功能。已下载的离线书籍不受影响，可正常阅读。如有疑问请联系客服热线 6332 3255。">
+          data-body="为提升平台稳定性及用户体验，NLB eReads将于2025年3月20日凌晨2:00至4:00进行系统维护。维护期间平台将暂停所有服务，包括借阅、续借、推送及下载功能。已下载的离线书籍不受影响，可正常阅读。如有疑问请联系客服热线 6332 3255。"
+          onclick="openAnnounce(this)">
           <span class="bg-orange-500 text-white text-xs px-2 py-0.5 rounded-md flex-shrink-0 mt-0.5">提醒</span>
           <div class="flex-1 min-w-0">
             <p class="text-sm font-medium text-gray-800">系统维护通知：3月20日凌晨2-4时暂停服务</p>
@@ -671,37 +673,38 @@ $(function () {
     navigateTo('search');
   });
 
-  // 公告详情弹窗
-  $(document).on('click', '.announce-item', function(){
-    const tag = $(this).data('tag');
-    const date = $(this).data('date');
-    const title = $(this).data('title');
-    const body = $(this).data('body');
-    const tagColors = { '新书':'#2563eb', '活动':'#16a34a', '提醒':'#f97316' };
-    const color = tagColors[tag] || '#6b7280';
-    const $modal = $(`
-      <div class="fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4">
-        <div class="bg-white rounded-2xl w-full max-w-sm shadow-xl overflow-hidden">
-          <div class="px-5 py-4 border-b border-gray-100 flex items-center justify-between">
-            <div class="flex items-center gap-2">
-              <span class="text-white text-xs px-2 py-0.5 rounded-md font-medium" style="background:${color}">${tag}</span>
-              <span class="text-xs text-gray-400">${date}</span>
-            </div>
-            <button class="btn-close text-gray-400 hover:text-gray-600"><i class="fas fa-times"></i></button>
-          </div>
-          <div class="p-5">
-            <h3 class="font-semibold text-gray-800 text-sm leading-snug mb-3">${title}</h3>
-            <p class="text-sm text-gray-500 leading-relaxed">${body}</p>
-          </div>
-          <div class="px-5 pb-5">
-            <button class="btn-close w-full py-2.5 border border-gray-200 rounded-xl text-sm text-gray-600 hover:bg-gray-50" data-i18n="announce.close">关闭</button>
-          </div>
-        </div>
-      </div>`);
-    $('body').append($modal);
-    $modal.find('.btn-close').on('click', function(){ $modal.remove(); });
-  });
 });
+
+// 公告详情弹窗（全局函数，供 onclick 直接调用）
+function openAnnounce(el) {
+  const tag   = el.dataset.tag;
+  const date  = el.dataset.date;
+  const title = el.dataset.title;
+  const body  = el.dataset.body;
+  const tagColors = { '新书':'#2563eb', '活动':'#16a34a', '提醒':'#f97316' };
+  const color = tagColors[tag] || '#6b7280';
+  const div = document.createElement('div');
+  div.className = 'fixed inset-0 bg-black/50 z-[99990] flex items-center justify-center p-4';
+  div.innerHTML = `
+    <div class="bg-white rounded-2xl w-full max-w-sm shadow-xl overflow-hidden">
+      <div class="px-5 py-4 border-b border-gray-100 flex items-center justify-between">
+        <div class="flex items-center gap-2">
+          <span class="text-white text-xs px-2 py-0.5 rounded-md font-medium" style="background:${color}">${tag}</span>
+          <span class="text-xs text-gray-400">${date}</span>
+        </div>
+        <button onclick="this.closest('.fixed').remove()" class="text-gray-400 hover:text-gray-600"><i class="fas fa-times"></i></button>
+      </div>
+      <div class="p-5">
+        <h3 class="font-semibold text-gray-800 text-sm leading-snug mb-3">${title}</h3>
+        <p class="text-sm text-gray-500 leading-relaxed">${body}</p>
+      </div>
+      <div class="px-5 pb-5">
+        <button onclick="this.closest('.fixed').remove()" class="w-full py-2.5 border border-gray-200 rounded-xl text-sm text-gray-600 hover:bg-gray-50">关闭</button>
+      </div>
+    </div>`;
+  div.addEventListener('click', function(e){ if (e.target === div) div.remove(); });
+  document.body.appendChild(div);
+}
 </script>
 </body>
 </html>
