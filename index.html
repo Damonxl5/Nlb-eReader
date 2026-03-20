@@ -3,299 +3,533 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>NLB eReads - 原型预览</title>
+<title>首页 - NLB eReads</title>
 <script src="https://cdn.tailwindcss.com"></script>
+<script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<script src="nav.js"></script>
+<script>tailwind.config={theme:{extend:{colors:{primary:'#0f4c81','primary-dark':'#0a3560',accent:'#f97316'},fontFamily:{sans:['Inter','sans-serif']}}}}</script>
 <style>
-  * { box-sizing: border-box; }
-  body { font-family: 'Inter', sans-serif; background: #0f172a; margin: 0; padding: 0; }
-  .page-section { margin-bottom: 80px; }
-  .section-label {
-    position: sticky; top: 0; z-index: 100;
-    background: #0f172a;
-    padding: 16px 24px 12px;
-    display: flex; align-items: center; gap: 12px;
-  }
-  .section-num {
-    width: 28px; height: 28px; border-radius: 8px;
-    background: #0f4c81; color: #fff;
-    display: flex; align-items: center; justify-content: center;
-    font-size: 12px; font-weight: 700; flex-shrink: 0;
-  }
-  .section-title { color: #e2e8f0; font-size: 15px; font-weight: 600; }
-  .section-desc { color: #64748b; font-size: 12px; margin-left: auto; }
-  .iframe-wrapper {
-    margin: 0 24px;
-    border-radius: 16px;
-    overflow: hidden;
-    border: 1px solid #1e293b;
-    box-shadow: 0 25px 60px rgba(0,0,0,0.5);
-    background: #fff;
-  }
-  .iframe-wrapper iframe {
-    width: 100%; display: block; border: none;
-  }
-  /* Top nav bar */
-  .top-nav {
-    position: fixed; top: 0; left: 0; right: 0; z-index: 999;
-    background: rgba(15,23,42,0.95);
-    backdrop-filter: blur(12px);
-    border-bottom: 1px solid #1e293b;
-    padding: 10px 24px;
-    display: flex; align-items: center; gap: 16px;
-  }
-  .top-nav-logo { display: flex; align-items: center; gap: 8px; }
-  .top-nav-logo .icon {
-    width: 32px; height: 32px; background: #0f4c81;
-    border-radius: 8px; display: flex; align-items: center; justify-content: center;
-  }
-  .top-nav-logo span { color: #e2e8f0; font-weight: 700; font-size: 15px; }
-  .nav-links { display: flex; gap: 4px; overflow-x: auto; flex: 1; }
-  .nav-link {
-    flex-shrink: 0; padding: 6px 14px; border-radius: 8px;
-    color: #94a3b8; font-size: 12px; cursor: pointer;
-    transition: all 0.15s; white-space: nowrap; border: none; background: none;
-  }
-  .nav-link:hover { background: #1e293b; color: #e2e8f0; }
-  .nav-link.active { background: #0f4c81; color: #fff; }
-  .badge {
-    display: inline-block; background: #1e3a5f; color: #60a5fa;
-    font-size: 10px; padding: 2px 6px; border-radius: 4px; margin-left: 4px;
-  }
-  body { padding-top: 56px; }
+  body{font-family:'Inter',sans-serif;background:#f8fafc;}
+  .nav-shadow{box-shadow:0 2px 20px rgba(15,76,129,0.08);}
+  .hero-gradient{background:linear-gradient(135deg,#0f4c81 0%,#1a6bb5 60%,#0e7490 100%);}
+  .card-hover{transition:all 0.2s;cursor:pointer;}
+  .card-hover:hover{transform:translateY(-4px);box-shadow:0 12px 32px rgba(15,76,129,0.15);}
+  .scrollbar-hide::-webkit-scrollbar{display:none;}
+  /* AI Search Button */
+  @keyframes aiGlow{0%,100%{box-shadow:0 2px 8px rgba(249,115,22,.4),inset 0 1px 0 rgba(255,255,255,.2)}50%{box-shadow:0 2px 14px rgba(249,115,22,.7),inset 0 1px 0 rgba(255,255,255,.2)}}
+  @keyframes aiSparkle{0%,100%{transform:scale(1) rotate(0deg)}50%{transform:scale(1.15) rotate(12deg)}}
+  #btn-search{animation:aiGlow 2s ease-in-out infinite;background:linear-gradient(135deg,#f97316,#fb923c)!important;}
+  #btn-search:hover{animation:none;box-shadow:0 4px 16px rgba(249,115,22,.6)!important;transform:scale(1.04);}
+  #btn-search .fa-magic{animation:aiSparkle 2s ease-in-out infinite;display:inline-block;}
+  /* AI Search Modal */
+  @keyframes aiSrchIn{from{transform:scale(.93) translateY(-12px);opacity:0}to{transform:scale(1) translateY(0);opacity:1}}
+  #ai-search-overlay{position:fixed;inset:0;z-index:99999;display:flex;align-items:center;justify-content:center;background:rgba(15,23,42,.55);backdrop-filter:blur(6px);}
+  #ai-search-modal{width:560px;max-width:calc(100vw - 32px);max-height:calc(100vh - 48px);border-radius:20px;overflow:hidden;background:#fff;box-shadow:0 24px 64px rgba(0,0,0,.25);animation:aiSrchIn .3s cubic-bezier(.34,1.56,.64,1);display:flex;flex-direction:column;}
+  .ai-srch-hd{background:linear-gradient(135deg,#0f4c81,#1a6bb5);padding:16px 20px;flex-shrink:0;}
+  .ai-srch-body{overflow-y:auto;padding:20px;}
+  .ai-srch-card{background:#f8fafc;border:1px solid #e2e8f0;border-radius:14px;overflow:hidden;cursor:pointer;transition:all .2s;}
+  .ai-srch-card:hover{transform:translateY(-2px);box-shadow:0 8px 24px rgba(15,76,129,.12);border-color:#bfdbfe;}
+  .ai-dot{width:8px;height:8px;border-radius:50%;background:#93c5fd;animation:aiDt 1.2s infinite;display:inline-block;}
+  .ai-dot:nth-child(2){animation-delay:.2s;}.ai-dot:nth-child(3){animation-delay:.4s;}
+  @keyframes aiDt{0%,60%,100%{transform:translateY(0)}30%{transform:translateY(-6px)}}
 </style>
 </head>
-<body>
+<body class="min-h-screen">
 
-<!-- Fixed Top Navigation -->
-<div class="top-nav">
-  <div class="top-nav-logo">
-    <div class="icon"><i class="fas fa-book-open text-white text-sm"></i></div>
-    <span>NLB eReads</span>
-    <span style="color:#475569;font-size:11px;margin-left:4px;">原型预览</span>
+<!-- Nav -->
+<nav class="bg-white nav-shadow sticky top-0 z-50">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6">
+    <div class="flex items-center h-16 gap-4">
+      <div class="flex items-center gap-2 flex-shrink-0 cursor-pointer" data-nav="home">
+        <div class="w-8 h-8 rounded-lg flex items-center justify-center" style="background:#0f4c81">
+          <i class="fas fa-book-open text-white text-sm"></i>
+        </div>
+        <span class="font-bold text-lg hidden sm:block" style="color:#0f4c81">NLB eReads</span>
+      </div>
+      <div class="flex-1 max-w-2xl mx-auto">
+        <div class="relative">
+          <i class="fas fa-search absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 text-sm"></i>
+          <input id="search-input" type="text" placeholder="搜索书名、作者、ISBN..." class="w-full pl-10 pr-20 py-2.5 bg-gray-100 rounded-xl text-sm focus:outline-none focus:ring-2 focus:bg-white transition">
+          <button id="btn-search" class="absolute right-2 top-1/2 -translate-y-1/2 text-white px-3 py-1.5 rounded-lg text-xs font-medium transition" style="background:#0f4c81">
+            <i class="fas fa-magic mr-1"></i>AI搜索
+          </button>
+        </div>
+      </div>
+      <div class="flex items-center gap-3 flex-shrink-0">
+        <button class="relative p-2 text-gray-500 hover:text-primary transition">
+          <i class="fas fa-bell text-lg"></i>
+          <span class="absolute top-1 right-1 w-2 h-2 bg-red-500 rounded-full"></span>
+        </button>
+        <div class="flex items-center gap-2 cursor-pointer hover:bg-gray-50 rounded-xl px-2 py-1.5 transition" data-nav="profile">
+          <div class="w-8 h-8 rounded-full flex items-center justify-center" style="background:#0f4c81">
+            <span class="text-white text-xs font-bold">陈</span>
+          </div>
+          <div class="hidden sm:block">
+            <p class="text-xs font-medium text-gray-800">陈小明</p>
+            <p class="text-xs text-gray-400">证号 S1234567A</p>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- Category Nav -->
+    <div class="flex items-center gap-1 pb-2 overflow-x-auto scrollbar-hide">
+      <button class="cat-btn flex-shrink-0 px-4 py-1.5 rounded-full text-xs font-medium transition" style="background:#0f4c81;color:#fff" data-cat="all">全部</button>
+      <button class="cat-btn flex-shrink-0 px-4 py-1.5 text-gray-600 hover:bg-gray-100 rounded-full text-xs transition" data-cat="fiction">文学小说</button>
+      <button class="cat-btn flex-shrink-0 px-4 py-1.5 text-gray-600 hover:bg-gray-100 rounded-full text-xs transition" data-cat="history">历史人文</button>
+      <button class="cat-btn flex-shrink-0 px-4 py-1.5 text-gray-600 hover:bg-gray-100 rounded-full text-xs transition" data-cat="tech">科技商业</button>
+      <button class="cat-btn flex-shrink-0 px-4 py-1.5 text-gray-600 hover:bg-gray-100 rounded-full text-xs transition" data-cat="kids">少儿读物</button>
+      <button class="cat-btn flex-shrink-0 px-4 py-1.5 text-gray-600 hover:bg-gray-100 rounded-full text-xs transition" data-cat="academic">学术专著</button>
+      <button class="cat-btn flex-shrink-0 px-4 py-1.5 text-gray-600 hover:bg-gray-100 rounded-full text-xs transition" data-cat="local">本地特色</button>
+      <button class="cat-btn flex-shrink-0 px-4 py-1.5 text-gray-600 hover:bg-gray-100 rounded-full text-xs transition" data-cat="en">English</button>
+      <button class="cat-btn flex-shrink-0 px-4 py-1.5 text-gray-600 hover:bg-gray-100 rounded-full text-xs transition" data-cat="ms">Malay</button>
+      <button class="cat-btn flex-shrink-0 px-4 py-1.5 text-gray-600 hover:bg-gray-100 rounded-full text-xs transition" data-cat="ta">Tamil</button>
+    </div>
   </div>
-  <div class="nav-links">
-    <button class="nav-link active" onclick="scrollToSection('s1',this)">
-      <i class="fas fa-sign-in-alt mr-1"></i>登录
-    </button>
-    <button class="nav-link" onclick="scrollToSection('s2',this)">
-      <i class="fas fa-home mr-1"></i>首页
-    </button>
-    <button class="nav-link" onclick="scrollToSection('s3',this)">
-      <i class="fas fa-search mr-1"></i>搜索
-    </button>
-    <button class="nav-link" onclick="scrollToSection('s4',this)">
-      <i class="fas fa-book mr-1"></i>书籍详情
-    </button>
-    <button class="nav-link" onclick="scrollToSection('s5',this)">
-      <i class="fas fa-book-reader mr-1"></i>在线阅读
-    </button>
-    <button class="nav-link" onclick="scrollToSection('s6',this)">
-      <i class="fas fa-bookmark mr-1"></i>我的书架
-    </button>
-    <button class="nav-link" onclick="scrollToSection('s7',this)">
-      <i class="fas fa-user mr-1"></i>个人中心
-    </button>
-    <button class="nav-link" onclick="scrollToSection('s8',this)">
-      <i class="fas fa-headset mr-1"></i>帮助客服
-    </button>
-    <button class="nav-link" onclick="scrollToSection('s9',this)">
-      <i class="fas fa-tablet-alt mr-1"></i>设备管理
-    </button>
-    <button class="nav-link" onclick="scrollToSection('s10',this)">
-      <i class="fas fa-robot mr-1"></i>AI客服
-    </button>
+</nav>
+
+<div class="max-w-7xl mx-auto px-4 sm:px-6 py-6">
+
+  <!-- Hero -->
+  <div class="hero-gradient rounded-2xl p-6 sm:p-8 mb-6 relative overflow-hidden">
+    <div class="absolute right-0 top-0 w-64 h-full opacity-10 pointer-events-none">
+      <i class="fas fa-book-open text-white" style="font-size:200px;position:absolute;right:-20px;top:-20px;"></i>
+    </div>
+    <div class="relative z-10 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+      <div>
+        <span class="inline-block bg-white/20 text-white text-xs px-3 py-1 rounded-full mb-3">🎉 本月新书已上架 128 本</span>
+        <h2 class="text-2xl sm:text-3xl font-bold text-white mb-2">探索无限知识世界</h2>
+        <p class="text-blue-100 text-sm mb-4">持有效借书证，免费借阅 50,000+ 正版电子书</p>
+        <div class="flex gap-3">
+          <button class="bg-white text-sm font-semibold px-5 py-2.5 rounded-xl hover:bg-blue-50 transition" style="color:#0f4c81" data-nav="search">
+            <i class="fas fa-search mr-2"></i>开始找书
+          </button>
+          <button class="bg-white/20 text-white text-sm font-medium px-5 py-2.5 rounded-xl hover:bg-white/30 transition" data-nav="bookshelf">
+            <i class="fas fa-bookmark mr-2"></i>我的书架
+          </button>
+        </div>
+      </div>
+      <div class="flex gap-3 flex-shrink-0">
+        <div class="bg-white/10 rounded-2xl p-4 text-center">
+          <p class="text-2xl font-bold text-white">50K+</p>
+          <p class="text-blue-200 text-xs mt-1">电子书</p>
+        </div>
+        <div class="bg-white/10 rounded-2xl p-4 text-center">
+          <p class="text-2xl font-bold text-white">4</p>
+          <p class="text-blue-200 text-xs mt-1">语种</p>
+        </div>
+        <div class="bg-white/10 rounded-2xl p-4 text-center">
+          <p class="text-2xl font-bold text-white">免费</p>
+          <p class="text-blue-200 text-xs mt-1">持证借阅</p>
+        </div>
+      </div>
+    </div>
   </div>
-  <div style="color:#475569;font-size:11px;flex-shrink:0;">10 个页面</div>
+
+  <!-- Quick Actions -->
+  <div class="grid grid-cols-4 sm:grid-cols-8 gap-3 mb-6">
+    <div class="quick-action bg-white rounded-2xl p-3 shadow-sm text-center cursor-pointer hover:shadow-md transition" data-nav="bookshelf">
+      <div class="w-10 h-10 rounded-xl flex items-center justify-center mx-auto mb-2" style="background:#eff6ff">
+        <i class="fas fa-book-open text-sm" style="color:#0f4c81"></i>
+      </div>
+      <p class="text-xs text-gray-600 font-medium">我的书架</p>
+    </div>
+    <div class="quick-action bg-white rounded-2xl p-3 shadow-sm text-center cursor-pointer hover:shadow-md transition" data-nav="bookshelf">
+      <div class="w-10 h-10 rounded-xl flex items-center justify-center mx-auto mb-2" style="background:#f0fdf4">
+        <i class="fas fa-clock text-sm text-green-600"></i>
+      </div>
+      <p class="text-xs text-gray-600 font-medium">借阅中</p>
+    </div>
+    <div class="quick-action bg-white rounded-2xl p-3 shadow-sm text-center cursor-pointer hover:shadow-md transition" data-nav="bookshelf">
+      <div class="w-10 h-10 rounded-xl flex items-center justify-center mx-auto mb-2" style="background:#fefce8">
+        <i class="fas fa-download text-sm text-yellow-600"></i>
+      </div>
+      <p class="text-xs text-gray-600 font-medium">离线下载</p>
+    </div>
+    <div class="quick-action bg-white rounded-2xl p-3 shadow-sm text-center cursor-pointer hover:shadow-md transition" data-nav="devices">
+      <div class="w-10 h-10 rounded-xl flex items-center justify-center mx-auto mb-2" style="background:#fdf4ff">
+        <i class="fas fa-tablet-alt text-sm text-purple-600"></i>
+      </div>
+      <p class="text-xs text-gray-600 font-medium">阅读器推送</p>
+    </div>
+    <div class="quick-action bg-white rounded-2xl p-3 shadow-sm text-center cursor-pointer hover:shadow-md transition" data-nav="search">
+      <div class="w-10 h-10 rounded-xl flex items-center justify-center mx-auto mb-2" style="background:#fff7ed">
+        <i class="fas fa-fire text-sm text-orange-500"></i>
+      </div>
+      <p class="text-xs text-gray-600 font-medium">热门借阅</p>
+    </div>
+    <div class="quick-action bg-white rounded-2xl p-3 shadow-sm text-center cursor-pointer hover:shadow-md transition" data-nav="search">
+      <div class="w-10 h-10 rounded-xl flex items-center justify-center mx-auto mb-2" style="background:#f0fdf4">
+        <i class="fas fa-seedling text-sm text-green-600"></i>
+      </div>
+      <p class="text-xs text-gray-600 font-medium">本地特色</p>
+    </div>
+    <div class="quick-action bg-white rounded-2xl p-3 shadow-sm text-center cursor-pointer hover:shadow-md transition" data-nav="profile">
+      <div class="w-10 h-10 rounded-xl flex items-center justify-center mx-auto mb-2" style="background:#fef2f2">
+        <i class="fas fa-user text-sm text-red-500"></i>
+      </div>
+      <p class="text-xs text-gray-600 font-medium">个人中心</p>
+    </div>
+    <div class="quick-action bg-white rounded-2xl p-3 shadow-sm text-center cursor-pointer hover:shadow-md transition" data-nav="help">
+      <div class="w-10 h-10 rounded-xl flex items-center justify-center mx-auto mb-2" style="background:#f0f9ff">
+        <i class="fas fa-headset text-sm text-cyan-600"></i>
+      </div>
+      <p class="text-xs text-gray-600 font-medium">帮助客服</p>
+    </div>
+  </div>
+
+  <!-- New Books -->
+  <div class="mb-6">
+    <div class="flex items-center justify-between mb-4">
+      <h3 class="font-bold text-gray-800 text-base">新书速递</h3>
+      <button class="text-sm hover:underline flex items-center gap-1" style="color:#0f4c81" data-nav="search">
+        查看全部 <i class="fas fa-chevron-right text-xs"></i>
+      </button>
+    </div>
+    <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-4">
+      <div class="book-card bg-white rounded-2xl shadow-sm card-hover overflow-hidden" data-nav="book-detail">
+        <div class="h-36 flex items-end p-3" style="background:linear-gradient(135deg,#0f4c81,#1a6bb5)">
+          <div><p class="text-white font-bold text-xs">新加坡史</p><p class="text-blue-200 text-xs">柯木林</p></div>
+        </div>
+        <div class="p-3">
+          <span class="bg-green-100 text-green-700 text-xs px-2 py-0.5 rounded-full">可借阅</span>
+          <p class="text-xs text-gray-400 mt-1.5">历史人文 · 中文</p>
+        </div>
+      </div>
+      <div class="book-card bg-white rounded-2xl shadow-sm card-hover overflow-hidden" data-nav="book-detail">
+        <div class="h-36 flex items-end p-3" style="background:linear-gradient(135deg,#f093fb,#f5576c)">
+          <div><p class="text-white font-bold text-xs">活着</p><p class="text-pink-100 text-xs">余华</p></div>
+        </div>
+        <div class="p-3">
+          <span class="bg-green-100 text-green-700 text-xs px-2 py-0.5 rounded-full">可借阅</span>
+          <p class="text-xs text-gray-400 mt-1.5">文学小说 · 中文</p>
+        </div>
+      </div>
+      <div class="book-card bg-white rounded-2xl shadow-sm card-hover overflow-hidden" data-nav="book-detail">
+        <div class="h-36 flex items-end p-3" style="background:linear-gradient(135deg,#4facfe,#00f2fe)">
+          <div><p class="text-white font-bold text-xs">Crazy Rich Asians</p><p class="text-blue-100 text-xs">Kevin Kwan</p></div>
+        </div>
+        <div class="p-3">
+          <span class="bg-yellow-100 text-yellow-700 text-xs px-2 py-0.5 rounded-full">预约中</span>
+          <p class="text-xs text-gray-400 mt-1.5">Fiction · English</p>
+        </div>
+      </div>
+      <div class="book-card bg-white rounded-2xl shadow-sm card-hover overflow-hidden" data-nav="book-detail">
+        <div class="h-36 flex items-end p-3" style="background:linear-gradient(135deg,#43e97b,#38f9d7)">
+          <div><p class="text-white font-bold text-xs">小王子</p><p class="text-green-100 text-xs">圣埃克苏佩里</p></div>
+        </div>
+        <div class="p-3">
+          <span class="bg-green-100 text-green-700 text-xs px-2 py-0.5 rounded-full">可借阅</span>
+          <p class="text-xs text-gray-400 mt-1.5">少儿读物 · 中文</p>
+        </div>
+      </div>
+      <div class="book-card bg-white rounded-2xl shadow-sm card-hover overflow-hidden" data-nav="book-detail">
+        <div class="h-36 flex items-end p-3" style="background:linear-gradient(135deg,#fa709a,#fee140)">
+          <div><p class="text-white font-bold text-xs">三体</p><p class="text-yellow-100 text-xs">刘慈欣</p></div>
+        </div>
+        <div class="p-3">
+          <span class="bg-green-100 text-green-700 text-xs px-2 py-0.5 rounded-full">可借阅</span>
+          <p class="text-xs text-gray-400 mt-1.5">科幻小说 · 中文</p>
+        </div>
+      </div>
+      <div class="book-card bg-white rounded-2xl shadow-sm card-hover overflow-hidden" data-nav="book-detail">
+        <div class="h-36 flex items-end p-3" style="background:linear-gradient(135deg,#a18cd1,#fbc2eb)">
+          <div><p class="text-white font-bold text-xs">Singapore: A Biography</p><p class="text-purple-100 text-xs">Mark Ravinder Frost</p></div>
+        </div>
+        <div class="p-3">
+          <span class="bg-green-100 text-green-700 text-xs px-2 py-0.5 rounded-full">可借阅</span>
+          <p class="text-xs text-gray-400 mt-1.5">History · English</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Announcements + Stats -->
+  <div class="grid grid-cols-1 lg:grid-cols-3 gap-5">
+    <div class="lg:col-span-2 bg-white rounded-2xl shadow-sm p-5">
+      <h3 class="font-bold text-gray-800 text-base mb-4">公告动态</h3>
+      <div class="space-y-3">
+        <div class="announce-item flex items-start gap-3 p-3 bg-blue-50 rounded-xl cursor-pointer hover:bg-blue-100 transition"
+          data-tag="新书" data-date="2025-03-15"
+          data-title="3月新书上架：128本中英文新书已入库"
+          data-body="本月共新增128本中英文电子书，涵盖历史人文、科幻小说、儿童绘本等多个分类。其中中文新书82本，英文新书46本。所有新书即日起可免费借阅，每位会员借阅期21天，可续借1次。">
+          <span class="bg-blue-600 text-white text-xs px-2 py-0.5 rounded-md flex-shrink-0 mt-0.5">新书</span>
+          <div class="flex-1 min-w-0">
+            <p class="text-sm font-medium text-gray-800">3月新书上架：128本中英文新书已入库</p>
+            <p class="text-xs text-gray-400 mt-0.5">2025-03-15</p>
+          </div>
+          <i class="fas fa-chevron-right text-gray-300 text-xs mt-1 flex-shrink-0"></i>
+        </div>
+        <div class="announce-item flex items-start gap-3 p-3 hover:bg-gray-50 rounded-xl cursor-pointer transition"
+          data-tag="活动" data-date="2025-03-10"
+          data-title="NLB阅读节：4月线下活动报名开启"
+          data-body="NLB阅读节将于2025年4月12日至4月20日在国家图书馆（维多利亚街）举办。活动包括作者见面会、读书分享会、儿童阅读工作坊等多项精彩内容。报名免费，名额有限，请尽早通过NLB官网或本平台完成报名。">
+          <span class="bg-green-600 text-white text-xs px-2 py-0.5 rounded-md flex-shrink-0 mt-0.5">活动</span>
+          <div class="flex-1 min-w-0">
+            <p class="text-sm font-medium text-gray-800">NLB阅读节：4月线下活动报名开启</p>
+            <p class="text-xs text-gray-400 mt-0.5">2025-03-10</p>
+          </div>
+          <i class="fas fa-chevron-right text-gray-300 text-xs mt-1 flex-shrink-0"></i>
+        </div>
+        <div class="announce-item flex items-start gap-3 p-3 hover:bg-gray-50 rounded-xl cursor-pointer transition"
+          data-tag="提醒" data-date="2025-03-08"
+          data-title="系统维护通知：3月20日凌晨2-4时暂停服务"
+          data-body="为提升平台稳定性及用户体验，NLB eReads将于2025年3月20日凌晨2:00至4:00进行系统维护。维护期间平台将暂停所有服务，包括借阅、续借、推送及下载功能。已下载的离线书籍不受影响，可正常阅读。如有疑问请联系客服热线 6332 3255。">
+          <span class="bg-orange-500 text-white text-xs px-2 py-0.5 rounded-md flex-shrink-0 mt-0.5">提醒</span>
+          <div class="flex-1 min-w-0">
+            <p class="text-sm font-medium text-gray-800">系统维护通知：3月20日凌晨2-4时暂停服务</p>
+            <p class="text-xs text-gray-400 mt-0.5">2025-03-08</p>
+          </div>
+          <i class="fas fa-chevron-right text-gray-300 text-xs mt-1 flex-shrink-0"></i>
+        </div>
+      </div>
+    </div>
+    <div class="bg-white rounded-2xl shadow-sm p-5">
+      <h3 class="font-bold text-gray-800 text-base mb-4">我的借阅</h3>
+      <div class="space-y-3">
+        <div class="flex items-center justify-between p-3 bg-gray-50 rounded-xl">
+          <span class="text-sm text-gray-600">借阅中</span>
+          <span class="font-bold text-lg" style="color:#0f4c81">3</span>
+        </div>
+        <div class="flex items-center justify-between p-3 bg-red-50 rounded-xl">
+          <span class="text-sm text-gray-600">即将到期</span>
+          <span class="font-bold text-lg text-red-600">1</span>
+        </div>
+        <div class="flex items-center justify-between p-3 bg-gray-50 rounded-xl">
+          <span class="text-sm text-gray-600">剩余额度</span>
+          <span class="font-bold text-lg text-green-600">2/5</span>
+        </div>
+        <button class="w-full py-2.5 text-white rounded-xl text-sm font-medium transition hover:opacity-90" style="background:#0f4c81" data-nav="bookshelf">
+          <i class="fas fa-bookmark mr-2"></i>管理书架
+        </button>
+      </div>
+    </div>
+  </div>
+
 </div>
 
-<!-- Page 1: Login -->
-<div class="page-section" id="s1">
-  <div class="section-label">
-    <div class="section-num">1</div>
-    <span class="section-title">登录 / 身份核验</span>
-    <span class="section-desc">login.html</span>
-  </div>
-  <div class="iframe-wrapper">
-    <iframe src="login.html" height="700" scrolling="auto"></iframe>
-  </div>
-</div>
-
-<!-- Page 2: Home -->
-<div class="page-section" id="s2">
-  <div class="section-label">
-    <div class="section-num">2</div>
-    <span class="section-title">平台首页</span>
-    <span class="section-desc">home.html</span>
-  </div>
-  <div class="iframe-wrapper">
-    <iframe src="home.html" height="900" scrolling="auto"></iframe>
-  </div>
-</div>
-
-<!-- Page 3: Search -->
-<div class="page-section" id="s3">
-  <div class="section-label">
-    <div class="section-num">3</div>
-    <span class="section-title">资源检索 / 分类浏览</span>
-    <span class="section-desc">search.html</span>
-  </div>
-  <div class="iframe-wrapper">
-    <iframe src="search.html" height="900" scrolling="auto"></iframe>
-  </div>
-</div>
-
-<!-- Page 4: Book Detail -->
-<div class="page-section" id="s4">
-  <div class="section-label">
-    <div class="section-num">4</div>
-    <span class="section-title">书籍详情</span>
-    <span class="section-desc">book-detail.html</span>
-  </div>
-  <div class="iframe-wrapper">
-    <iframe src="book-detail.html" height="900" scrolling="auto"></iframe>
-  </div>
-</div>
-
-<!-- Page 5: Reading -->
-<div class="page-section" id="s5">
-  <div class="section-label">
-    <div class="section-num">5</div>
-    <span class="section-title">在线阅读</span>
-    <span class="section-desc">reading.html</span>
-  </div>
-  <div class="iframe-wrapper">
-    <iframe src="reading.html" height="800" scrolling="auto"></iframe>
-  </div>
-</div>
-
-<!-- Page 6: Bookshelf -->
-<div class="page-section" id="s6">
-  <div class="section-label">
-    <div class="section-num">6</div>
-    <span class="section-title">我的书架 / 借阅管理</span>
-    <span class="section-desc">bookshelf.html</span>
-  </div>
-  <div class="iframe-wrapper">
-    <iframe src="bookshelf.html" height="900" scrolling="auto"></iframe>
-  </div>
-</div>
-
-<!-- Page 7: Profile -->
-<div class="page-section" id="s7">
-  <div class="section-label">
-    <div class="section-num">7</div>
-    <span class="section-title">个人中心</span>
-    <span class="section-desc">profile.html</span>
-  </div>
-  <div class="iframe-wrapper">
-    <iframe src="profile.html" height="900" scrolling="auto"></iframe>
-  </div>
-</div>
-
-<!-- Page 8: Help -->
-<div class="page-section" id="s8">
-  <div class="section-label">
-    <div class="section-num">8</div>
-    <span class="section-title">帮助与客服</span>
-    <span class="section-desc">help.html</span>
-  </div>
-  <div class="iframe-wrapper">
-    <iframe src="help.html" height="900" scrolling="auto"></iframe>
-  </div>
-</div>
-
-<!-- Page 9: Devices -->
-<div class="page-section" id="s9">
-  <div class="section-label">
-    <div class="section-num">9</div>
-    <span class="section-title">推送 / 设备管理</span>
-    <span class="section-desc">devices.html</span>
-  </div>
-  <div class="iframe-wrapper">
-    <iframe src="devices.html" height="900" scrolling="auto"></iframe>
-  </div>
-</div>
-
-<!-- Page 10: AI Chat -->
-<div class="page-section" id="s10">
-  <div class="section-label">
-    <div class="section-num">10</div>
-    <span class="section-title">AI 智能客服</span>
-    <span class="section-desc">ai-chat.html</span>
-  </div>
-  <div class="iframe-wrapper">
-    <iframe src="ai-chat.html" height="700" scrolling="auto"></iframe>
-  </div>
-</div>
-
-<!-- Footer -->
-<div style="text-align:center;padding:40px 24px;color:#334155;font-size:12px;border-top:1px solid #1e293b;">
-  NLB eReads 高保真原型 · 10 个核心页面 · 基于 Tailwind CSS + Font Awesome
-</div>
-
-<script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
 <script>
-// 页面路由 → section ID 映射
-const PAGE_SECTION = {
-  login: 's1', home: 's2', search: 's3',
-  'book-detail': 's4', reading: 's5', bookshelf: 's6',
-  profile: 's7', help: 's8', devices: 's9', 'ai-chat': 's10'
-};
-const SECTION_NAV = ['s1','s2','s3','s4','s5','s6','s7','s8','s9','s10'];
+$(function () {
+  // ── AI 搜索知识库 ──
+  const BOOKS_SAMPLE = [
+    { title:'新加坡史', author:'柯木林', tag:'历史人文', lang:'中文', status:'available', rating:4.8, color:'linear-gradient(135deg,#0f4c81,#1a6bb5)' },
+    { title:'从第三世界到第一世界', author:'李光耀', tag:'历史人文', lang:'中文', status:'available', rating:4.9, color:'linear-gradient(135deg,#92400e,#d97706)' },
+    { title:'活着', author:'余华', tag:'文学小说', lang:'中文', status:'available', rating:4.9, color:'linear-gradient(135deg,#dc2626,#f97316)' },
+    { title:'三体', author:'刘慈欣', tag:'科幻小说', lang:'中文', status:'borrowed', rating:4.9, color:'linear-gradient(135deg,#7c3aed,#a855f7)' },
+    { title:'Singapore: A Biography', author:'Mark Ravinder Frost', tag:'History', lang:'English', status:'available', rating:4.7, color:'linear-gradient(135deg,#059669,#10b981)' },
+    { title:'The Singapore Story', author:'Lee Kuan Yew', tag:'History', lang:'English', status:'available', rating:4.8, color:'linear-gradient(135deg,#1e40af,#3b82f6)' },
+    { title:'Crazy Rich Asians', author:'Kevin Kwan', tag:'Fiction', lang:'English', status:'available', rating:4.6, color:'linear-gradient(135deg,#0891b2,#06b6d4)' },
+    { title:'人工智能时代', author:'李开复', tag:'科技商业', lang:'中文', status:'available', rating:4.7, color:'linear-gradient(135deg,#065f46,#34d399)' },
+    { title:'小王子（中文版）', author:'圣埃克苏佩里', tag:'少儿读物', lang:'中文', status:'available', rating:4.9, color:'linear-gradient(135deg,#be185d,#ec4899)' },
+    { title:'Sapiens', author:'Yuval Noah Harari', tag:'History', lang:'English', status:'available', rating:4.8, color:'linear-gradient(135deg,#374151,#6b7280)' },
+    { title:'Atomic Habits', author:'James Clear', tag:'Self-help', lang:'English', status:'borrowed', rating:4.7, color:'linear-gradient(135deg,#7c2d12,#ea580c)' },
+    { title:'新加坡华人史', author:'崔贵强', tag:'历史人文', lang:'中文', status:'available', rating:4.6, color:'linear-gradient(135deg,#134e4a,#0d9488)' },
+  ];
 
-/**
- * 供 iframe 子页面调用：window.parent.switchPage('home', 'home.html')
- * 滚动到对应 section 并高亮导航
- */
-function switchPage(pageKey, url) {
-  const sectionId = PAGE_SECTION[pageKey];
-  if (!sectionId) return;
-  const section = document.getElementById(sectionId);
-  if (!section) return;
-
-  // 更新该 section 内的 iframe src（触发页面刷新）
-  const iframe = section.querySelector('iframe');
-  if (iframe && iframe.src.indexOf(url) === -1) {
-    iframe.src = url;
+  // AI 意图解析：从自然语言提取关键词/分类/语言
+  function aiParse(q) {
+    const t = q.toLowerCase();
+    const intent = { keywords:[], cat:'', lang:'', mood:'' };
+    if (/历史|史|建国|殖民|独立/.test(t)) intent.cat = '历史人文';
+    else if (/小说|文学|故事|fiction/.test(t)) intent.cat = '文学小说';
+    else if (/科技|商业|创业|ai|人工智能|tech/.test(t)) intent.cat = '科技商业';
+    else if (/儿童|少儿|kids|children/.test(t)) intent.cat = '少儿读物';
+    else if (/学术|academic/.test(t)) intent.cat = '学术专著';
+    else if (/本地|新加坡|local|singapore/.test(t)) intent.cat = '本地特色';
+    if (/英文|english/.test(t)) intent.lang = 'English';
+    else if (/中文|华文|chinese/.test(t)) intent.lang = '中文';
+    else if (/马来|malay/.test(t)) intent.lang = 'Malay';
+    else if (/泰米尔|tamil/.test(t)) intent.lang = 'Tamil';
+    if (/推荐|好看|经典|必读/.test(t)) intent.mood = 'recommend';
+    intent.keywords = q.replace(/[，。？！,.?!]/g,'').split(/\s+/).filter(k=>k.length>1);
+    return intent;
   }
 
-  // 滚动到目标 section
-  section.scrollIntoView({ behavior: 'smooth', block: 'start' });
-
-  // 高亮顶部导航
-  const idx = SECTION_NAV.indexOf(sectionId);
-  document.querySelectorAll('.nav-link').forEach((b, i) => {
-    b.classList.toggle('active', i === idx);
-  });
-
-  // 短暂高亮边框提示
-  const wrapper = section.querySelector('.iframe-wrapper');
-  if (wrapper) {
-    wrapper.style.boxShadow = '0 0 0 3px #0f4c81, 0 25px 60px rgba(0,0,0,0.5)';
-    setTimeout(() => { wrapper.style.boxShadow = ''; }, 1500);
+  function aiSearch(q) {
+    const intent = aiParse(q);
+    let results = BOOKS_SAMPLE.filter(b => {
+      if (intent.lang && b.lang !== intent.lang) return false;
+      if (intent.cat && !b.tag.includes(intent.cat.slice(0,2))) return false;
+      return true;
+    });
+    // 关键词匹配兜底
+    if (!results.length) {
+      results = BOOKS_SAMPLE.filter(b =>
+        intent.keywords.some(k =>
+          b.title.toLowerCase().includes(k.toLowerCase()) ||
+          b.author.toLowerCase().includes(k.toLowerCase()) ||
+          b.tag.toLowerCase().includes(k.toLowerCase())
+        )
+      );
+    }
+    // 若仍无结果，返回评分最高的4本
+    if (!results.length) results = [...BOOKS_SAMPLE].sort((a,b)=>b.rating-a.rating).slice(0,4);
+    // 按评分排序，最多6条
+    return results.sort((a,b)=>b.rating-a.rating).slice(0,6);
   }
-}
 
-function scrollToSection(id, btn) {
-  document.querySelectorAll('.nav-link').forEach(b => b.classList.remove('active'));
-  btn.classList.add('active');
-  const el = document.getElementById(id);
-  if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
-}
+  function aiSummary(q, intent) {
+    const parts = [];
+    if (intent.cat) parts.push(`<strong>${intent.cat}</strong>类`);
+    if (intent.lang) parts.push(`<strong>${intent.lang}</strong>`);
+    if (intent.mood === 'recommend') parts.push('高评分推荐');
+    const desc = parts.length ? parts.join('·') + '书籍' : `与「${q}」相关的书籍`;
+    return `已为您智能匹配 ${desc}，共找到以下结果：`;
+  }
 
-// Auto-highlight nav on scroll
-const sections = ['s1','s2','s3','s4','s5','s6','s7','s8','s9','s10'];
-const navBtns = document.querySelectorAll('.nav-link');
-window.addEventListener('scroll', () => {
-  let current = 's1';
-  sections.forEach(id => {
-    const el = document.getElementById(id);
-    if (el && window.scrollY >= el.offsetTop - 100) current = id;
+  function statusBadge(s) {
+    if (s==='available') return '<span style="background:#dcfce7;color:#16a34a;font-size:10px;padding:2px 8px;border-radius:20px;font-weight:500;">可借阅</span>';
+    if (s==='borrowed')  return '<span style="background:#fee2e2;color:#dc2626;font-size:10px;padding:2px 8px;border-radius:20px;font-weight:500;">已借完</span>';
+    return '<span style="background:#fef9c3;color:#ca8a04;font-size:10px;padding:2px 8px;border-radius:20px;font-weight:500;">预约中</span>';
+  }
+
+  function showAiSearchModal(q) {
+    const intent = aiParse(q);
+    const $overlay = $(`
+      <div id="ai-search-overlay">
+        <div id="ai-search-modal">
+          <div class="ai-srch-hd">
+            <div style="display:flex;align-items:center;gap:10px;">
+              <div style="width:34px;height:34px;border-radius:10px;background:rgba(255,255,255,.2);display:flex;align-items:center;justify-content:center;flex-shrink:0;">
+                <i class="fas fa-magic" style="color:#fff;font-size:14px;"></i>
+              </div>
+              <div style="flex:1;">
+                <p style="color:#fff;font-weight:600;font-size:14px;margin:0;">AI 智能搜索</p>
+                <p style="color:rgba(255,255,255,.7);font-size:11px;margin:2px 0 0;">正在理解您的搜索意图...</p>
+              </div>
+              <button id="ai-srch-close" style="background:none;border:none;cursor:pointer;color:rgba(255,255,255,.7);padding:6px;">
+                <i class="fas fa-times" style="font-size:14px;"></i>
+              </button>
+            </div>
+            <div style="margin-top:12px;background:rgba(255,255,255,.15);border-radius:10px;padding:8px 12px;display:flex;align-items:center;gap:8px;">
+              <i class="fas fa-search" style="color:rgba(255,255,255,.6);font-size:12px;"></i>
+              <span style="color:#fff;font-size:13px;">${q}</span>
+            </div>
+          </div>
+          <div class="ai-srch-body" id="ai-srch-body">
+            <div style="display:flex;align-items:center;gap:8px;padding:20px 0;">
+              <div class="ai-dot"></div><div class="ai-dot"></div><div class="ai-dot"></div>
+              <span style="font-size:13px;color:#94a3b8;margin-left:4px;">AI 正在分析搜索意图...</span>
+            </div>
+          </div>
+        </div>
+      </div>`);
+    $('body').append($overlay);
+
+    // 关闭
+    $overlay.find('#ai-srch-close, #ai-search-overlay').on('click', function(e){
+      if (e.target === this) $overlay.remove();
+    });
+    $overlay.find('#ai-search-modal').on('click', e => e.stopPropagation());
+
+    // 模拟 AI 分析延迟后展示结果
+    setTimeout(() => {
+      const results = aiSearch(q);
+      const summary = aiSummary(q, intent);
+      const intentTags = [];
+      if (intent.cat) intentTags.push(`<span style="background:#eff6ff;color:#1d4ed8;font-size:11px;padding:3px 10px;border-radius:20px;">${intent.cat}</span>`);
+      if (intent.lang) intentTags.push(`<span style="background:#f0fdf4;color:#15803d;font-size:11px;padding:3px 10px;border-radius:20px;">${intent.lang}</span>`);
+      if (intent.mood==='recommend') intentTags.push(`<span style="background:#fff7ed;color:#c2410c;font-size:11px;padding:3px 10px;border-radius:20px;">高分推荐</span>`);
+
+      const cardsHtml = results.map(b => `
+        <div class="ai-srch-card" onclick="navigateTo('book-detail')">
+          <div style="display:flex;gap:12px;padding:12px;">
+            <div style="width:44px;height:60px;border-radius:8px;flex-shrink:0;background:${b.color};display:flex;align-items:flex-end;padding:4px;">
+              <p style="color:#fff;font-size:8px;font-weight:700;line-height:1.2;word-break:break-all;">${b.title.slice(0,6)}</p>
+            </div>
+            <div style="flex:1;min-width:0;">
+              <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:8px;">
+                <p style="font-size:13px;font-weight:600;color:#1e293b;margin:0;line-height:1.3;">${b.title}</p>
+                ${statusBadge(b.status)}
+              </div>
+              <p style="font-size:11px;color:#64748b;margin:3px 0 0;">${b.author}</p>
+              <div style="display:flex;align-items:center;gap:8px;margin-top:5px;">
+                <span style="font-size:10px;color:#94a3b8;">${b.tag} · ${b.lang}</span>
+                <span style="font-size:10px;color:#f59e0b;"><i class="fas fa-star" style="font-size:9px;"></i> ${b.rating}</span>
+              </div>
+            </div>
+          </div>
+        </div>`).join('');
+
+      $('#ai-srch-body').html(`
+        <div style="margin-bottom:14px;">
+          <div style="display:flex;align-items:center;gap:6px;margin-bottom:8px;">
+            <i class="fas fa-robot" style="color:#0f4c81;font-size:12px;"></i>
+            <p style="font-size:12px;color:#475569;margin:0;">${summary}</p>
+          </div>
+          ${intentTags.length ? `<div style="display:flex;gap:6px;flex-wrap:wrap;">${intentTags.join('')}</div>` : ''}
+        </div>
+        <div style="display:flex;flex-direction:column;gap:8px;">${cardsHtml}</div>
+        <button id="ai-srch-more" style="width:100%;margin-top:14px;padding:10px;border:1px solid #e2e8f0;border-radius:12px;background:#fff;font-size:13px;color:#0f4c81;cursor:pointer;font-family:inherit;transition:background .15s;"
+          onmouseenter="this.style.background='#eff6ff'" onmouseleave="this.style.background='#fff'">
+          <i class="fas fa-search mr-2"></i>查看全部搜索结果
+        </button>`);
+
+      // 更新副标题
+      $overlay.find('.ai-srch-hd p:last-child').text(`找到 ${results.length} 本相关书籍`);
+
+      // 查看全部 → 跳转搜索页
+      $('#ai-srch-more').on('click', () => {
+        sessionStorage.setItem('nlb_search_query', q);
+        $overlay.remove();
+        navigateTo('search');
+      });
+    }, 1200);
+  }
+
+  // Search
+  $('#btn-search').on('click', function () {
+    const q = $('#search-input').val().trim();
+    if (!q) return;
+    showAiSearchModal(q);
   });
-  navBtns.forEach((btn, i) => {
-    btn.classList.toggle('active', sections[i] === current);
+  $('#search-input').on('keypress', function (e) {
+    if (e.which === 13) {
+      const q = $(this).val().trim();
+      if (!q) return;
+      showAiSearchModal(q);
+    }
+  });
+  // Category buttons
+  $('.cat-btn').on('click', function () {
+    $('.cat-btn').css({background:'',color:''}).addClass('text-gray-600');
+    $(this).css({background:'#0f4c81',color:'#fff'}).removeClass('text-gray-600');
+    const cat = $(this).data('cat');
+    sessionStorage.setItem('nlb_search_cat', cat);
+    sessionStorage.removeItem('nlb_search_query');
+    navigateTo('search');
+  });
+
+  // 公告详情弹窗
+  $(document).on('click', '.announce-item', function(){
+    const tag = $(this).data('tag');
+    const date = $(this).data('date');
+    const title = $(this).data('title');
+    const body = $(this).data('body');
+    const tagColors = { '新书':'#2563eb', '活动':'#16a34a', '提醒':'#f97316' };
+    const color = tagColors[tag] || '#6b7280';
+    const $modal = $(`
+      <div class="fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4">
+        <div class="bg-white rounded-2xl w-full max-w-sm shadow-xl overflow-hidden">
+          <div class="px-5 py-4 border-b border-gray-100 flex items-center justify-between">
+            <div class="flex items-center gap-2">
+              <span class="text-white text-xs px-2 py-0.5 rounded-md font-medium" style="background:${color}">${tag}</span>
+              <span class="text-xs text-gray-400">${date}</span>
+            </div>
+            <button class="btn-close text-gray-400 hover:text-gray-600"><i class="fas fa-times"></i></button>
+          </div>
+          <div class="p-5">
+            <h3 class="font-semibold text-gray-800 text-sm leading-snug mb-3">${title}</h3>
+            <p class="text-sm text-gray-500 leading-relaxed">${body}</p>
+          </div>
+          <div class="px-5 pb-5">
+            <button class="btn-close w-full py-2.5 border border-gray-200 rounded-xl text-sm text-gray-600 hover:bg-gray-50">关闭</button>
+          </div>
+        </div>
+      </div>`);
+    $('body').append($modal);
+    $modal.find('.btn-close').on('click', function(){ $modal.remove(); });
   });
 });
 </script>
