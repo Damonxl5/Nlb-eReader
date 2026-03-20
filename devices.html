@@ -23,8 +23,11 @@ tailwind.config = {
   .status-pending { background:#fef9c3; color:#ca8a04; }
   .status-failed { background:#fee2e2; color:#dc2626; }
   .progress-bar { background:linear-gradient(90deg,#0f4c81,#1a6bb5); }
+  .scrollbar-hide::-webkit-scrollbar { display:none; }
+  .scrollbar-hide { -ms-overflow-style:none; scrollbar-width:none; }
   .tab-active { border-bottom:2px solid #0f4c81; color:#0f4c81; font-weight:600; }
 </style>
+<script src="i18n.js"></script>
 <script src="nav.js"></script>
 </head>
 <body class="min-h-screen">
@@ -64,7 +67,7 @@ tailwind.config = {
   </div>
 
   <!-- Tabs -->
-  <div class="flex border-b border-gray-200 mb-5 bg-white rounded-t-2xl px-4 shadow-sm" id="device-tabs">
+  <div class="flex border-b border-gray-200 mb-5 bg-white rounded-t-2xl px-4 shadow-sm overflow-x-auto scrollbar-hide" id="device-tabs">
     <button onclick="switchDeviceTab(this,'devices')" class="tab-active py-3 px-4 text-sm">我的设备</button>
     <button onclick="switchDeviceTab(this,'push')" class="py-3 px-4 text-sm text-gray-500 hover:text-gray-700">推送记录</button>
     <button onclick="switchDeviceTab(this,'format')" class="py-3 px-4 text-sm text-gray-500 hover:text-gray-700">格式设置</button>

@@ -23,6 +23,7 @@ tailwind.config = {
   .btn-primary:hover { background:#0a3560; }
   .device-card:hover { border-color:#0f4c81; background:#f0f7ff; }
 </style>
+<script src="i18n.js"></script>
 <script src="nav.js"></script>
 </head>
 <body class="min-h-screen">
@@ -58,9 +59,9 @@ tailwind.config = {
     <div class="lg:col-span-2">
       <!-- Book Header -->
       <div class="bg-white rounded-2xl p-6 shadow-sm mb-5">
-        <div class="flex gap-6">
+        <div class="flex flex-col sm:flex-row gap-5 sm:gap-6">
           <!-- Cover -->
-          <div class="flex-shrink-0">
+          <div class="flex-shrink-0 flex flex-col items-center sm:items-start">
             <div class="w-32 h-44 rounded-xl shadow-lg flex items-end p-3" style="background:linear-gradient(135deg,#0f4c81,#1a6bb5)">
               <div>
                 <p class="text-white font-bold text-xs leading-tight">新加坡史</p>
@@ -103,7 +104,7 @@ tailwind.config = {
               <span class="bg-gray-100 text-gray-600 text-xs px-3 py-1 rounded-full">中文</span>
             </div>
 
-            <div class="grid grid-cols-3 gap-3 mt-4 text-center">
+            <div class="grid grid-cols-3 sm:grid-cols-3 gap-3 mt-4 text-center">
               <div class="bg-gray-50 rounded-xl p-2">
                 <p class="text-xs text-gray-400">出版年份</p>
                 <p class="text-sm font-semibold text-gray-700 mt-0.5">2021</p>

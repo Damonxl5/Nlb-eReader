@@ -5,6 +5,12 @@
  * 独立打开时直接 window.location.href 跳转
  */
 
+// i18n 辅助（nav.js 加载时 i18n.js 可能还未加载，用安全包装）
+function _t(key, vars) {
+  if (typeof t === 'function') return t(key, vars);
+  return key;
+}
+
 // 页面路由映射
 const ROUTES = {
   login:       'login.html',
@@ -81,20 +87,47 @@ $(function () {
       #ai-fab-label{position:relative;}
     </style>`);
 
+    // 把语言切换按钮注入到导航栏右侧区域
+    if (!document.getElementById('lang-toggle-btn')) {
+      const $btn = $(`<button id="lang-toggle-btn" onclick="switchLang()"
+        style="flex-shrink:0;background:transparent;border:1px solid rgba(15,76,129,0.3);border-radius:7px;padding:3px 9px;font-size:11px;font-weight:700;color:#0f4c81;cursor:pointer;letter-spacing:.5px;font-family:inherit;transition:all .15s;white-space:nowrap;"
+        onmouseenter="this.style.background='#eff6ff'" onmouseleave="this.style.background='transparent'"
+      >${_t('lang.toggle')}</button>`);
+
+      const $bell = $('nav .fa-bell').first().closest('button, a');
+      if ($bell.length) {
+        // 大部分页面：铃铛在右侧 flex 容器里，插入到铃铛前保持对齐
+        $bell.before($btn);
+      } else if ($('nav').length) {
+        // book-detail / reading 等页面：nav 内只有一行 flex 容器，末尾添加
+        $('nav').first().find('> div').first().append($btn);
+      } else {
+        // 登录页等无导航栏：右上角固定，不与 FAB 冲突
+        $btn.css({
+          position:'fixed', top:'16px', right:'16px', zIndex:9999,
+          background:'rgba(255,255,255,0.92)',
+          boxShadow:'0 2px 8px rgba(0,0,0,.12)',
+          border:'1px solid rgba(255,255,255,0.6)',
+          color:'#0f4c81'
+        });
+        $('body').append($btn);
+      }
+    }
+
     // FAB — 带标签的吸引人版本
     $('body').append(`
       <div id="ai-fab-wrap">
-        <button id="ai-fab" title="AI 智能客服">
+        <button id="ai-fab" data-i18n-title="ai.chat.fab.title" title="${_t('ai.chat.fab.title')}">
           <i class="fas fa-robot" style="color:#fff;font-size:20px;"></i>
         </button>
-        <div id="ai-fab-label">✨ AI 智能客服</div>
+        <div id="ai-fab-label" data-i18n="ai.chat.fab.label">${_t('ai.chat.fab.label')}</div>
       </div>`);
 
     // 3秒后隐藏标签，保留 FAB
     setTimeout(() => $('#ai-fab-label').fadeOut(400), 4000);
 
-    // ── 知识库 ──
-    const AI_KB = {
+    // ── 知识库（双语）──
+    const AI_KB_ZH = {
       '借阅':'每位持有效借书证的会员可同时借阅最多 <strong>8本</strong> 电子书，每本借阅期 <strong>21天</strong>，可续借1次。<br><br>操作步骤：<br>① 搜索页找到书籍 → 点击封面<br>② 书籍详情页点击「立即借阅」<br>③ 借阅成功后可在「我的书架」查看',
       '额度':'您的借阅额度为 <strong>8本/次</strong>，当前已借 3 本，剩余 5 本。可在「我的书架」实时查看。',
       '续借':'续借步骤：<br>① 进入「我的书架 → 借阅中」<br>② 找到书籍，点击「续借」按钮<br>③ 借阅期自动延长 <strong>21天</strong><br><br>⚠️ 每本书最多续借 <strong>1次</strong>，请在到期前操作。',
@@ -109,12 +142,31 @@ $(function () {
       '免费':'是的，完全免费！持有效新加坡图书馆借书证即可免费借阅平台所有 50,000+ 本正版电子书。',
       '语言':'平台支持 <strong>4种语言</strong>：中文、English、Malay、Tamil，共收录 50,000+ 正版电子书。',
     };
-    const AI_DEFAULT = '感谢您的提问！您可以拨打客服热线 <strong>6332 3255</strong>（每日 10:00–21:00）或发送邮件至 <strong>enquiry@nlb.gov.sg</strong> 获得进一步帮助。还有其他问题吗？';
+    const AI_KB_EN = {
+      'borrow': 'Each member with a valid library card can borrow up to <strong>8 eBooks</strong> at a time, for <strong>21 days</strong> each, renewable once.<br><br>Steps:<br>① Find a book on the Search page → click the cover<br>② Click "Borrow Now" on the book detail page<br>③ View borrowed books in "My Shelf"',
+      'quota': 'Your borrow quota is <strong>8 books</strong>. You currently have 3 borrowed, with 5 remaining. Check "My Shelf" anytime.',
+      'renew': 'To renew:<br>① Go to "My Shelf → Borrowing"<br>② Find the book and click "Renew"<br>③ Loan period extends by <strong>21 days</strong><br><br>⚠️ Each book can only be renewed <strong>once</strong>. Renew before it expires.',
+      'push': 'To push to Kindle:<br>① Link your Kindle email in "Device Management"<br>② Click "Push to Device" on the book detail page<br>③ Select Kindle and tap "Start Push"<br><br>If push fails, add <strong>nlb@ereads.sg</strong> to your Kindle trusted senders.',
+      'kindle': 'To push to Kindle:<br>① Link your Kindle email in "Device Management"<br>② Click "Push to Device" on the book detail page<br>③ Select Kindle and tap "Start Push"',
+      'card': 'If you forgot your library card number:<br>① Check the NLB Mobile App<br>② Call hotline <strong>6332 3255</strong><br>③ Visit any NLB library counter with your NRIC/FIN',
+      'device': 'Supported e-readers:<br>• <strong>Kindle</strong> (MOBI/AZW3)<br>• <strong>Kobo</strong> (EPUB)<br>• <strong>BOOX</strong> (EPUB/PDF)<br>• <strong>iReader</strong> (EPUB/TXT)<br><br>Up to <strong>3 devices</strong> can be linked in "Device Management".',
+      'download': 'After borrowing, choose EPUB or PDF format on the book detail page. Manage downloads in "My Shelf → Downloads" (up to <strong>5GB</strong>).',
+      'overdue': 'NLB eBooks are <strong>automatically returned</strong> when the loan period ends — no overdue fines. We recommend enabling expiry reminders.',
+      'fine': 'NLB eBooks are <strong>automatically returned</strong> when the loan period ends — no overdue fines.',
+      'register': 'To get a library card: bring your NRIC/FIN/Passport to any NLB library. It\'s free and instant.',
+      'free': 'Yes, completely free! Any valid Singapore library card gives you free access to all 50,000+ eBooks on the platform.',
+      'language': 'The platform supports <strong>4 languages</strong>: Chinese, English, Malay, and Tamil, with 50,000+ titles.',
+    };
+
+    function getAiKb() {
+      return (typeof getLang === 'function' && getLang() === 'en') ? AI_KB_EN : AI_KB_ZH;
+    }
 
     function aiAnswer(q) {
-      const t = q.toLowerCase();
-      for (const [k,v] of Object.entries(AI_KB)) { if (t.includes(k.toLowerCase())) return v; }
-      return AI_DEFAULT;
+      const lower = q.toLowerCase();
+      const kb = getAiKb();
+      for (const [k,v] of Object.entries(kb)) { if (lower.includes(k.toLowerCase())) return v; }
+      return _t('ai.chat.default');
     }
     function aiTime() {
       const d = new Date();
@@ -157,9 +209,9 @@ $(function () {
                 <i class="fas fa-robot" style="color:#fff;font-size:15px;"></i>
               </div>
               <div style="flex:1;">
-                <p style="color:#fff;font-weight:600;font-size:14px;margin:0;">NLB 智能客服</p>
+                <p style="color:#fff;font-weight:600;font-size:14px;margin:0;">${_t('ai.chat.title')}</p>
                 <p style="color:rgba(255,255,255,.75);font-size:11px;margin:2px 0 0;display:flex;align-items:center;gap:4px;">
-                  <span style="width:6px;height:6px;background:#4ade80;border-radius:50%;display:inline-block;"></span>在线 · 通常即时回复
+                  <span style="width:6px;height:6px;background:#4ade80;border-radius:50%;display:inline-block;"></span>${_t('ai.chat.online')}
                 </p>
               </div>
               <button id="ai-chat-close" style="background:none;border:none;cursor:pointer;color:rgba(255,255,255,.8);width:28px;height:28px;border-radius:8px;font-size:18px;line-height:1;display:flex;align-items:center;justify-content:center;">×</button>
@@ -168,27 +220,27 @@ $(function () {
           <div class="ai-chat-bd" id="ai-msg-bd">
             <div id="ai-msg-list" style="display:flex;flex-direction:column;gap:14px;">
               <div style="display:flex;align-items:flex-start;gap:8px;">
-                <div style="width:26px;height:26px;border-radius:50%;background:linear-gradient(135deg,#0f4c81,#1a6bb5);display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:2px;"><i class="fas fa-robot" style="color:#fff;font-size:10px;"></i></div>
+                ${aiRobotIcon()}
                 <div>
-                  <div class="ai-bbl-ai">您好！我是 NLB eReads 智能客服 📚<br><br>我可以帮您解答借阅、续借、推送、账号等各类问题，请问有什么可以帮到您？</div>
-                  <p style="font-size:10px;color:#94a3b8;margin:3px 0 0 4px;">刚刚</p>
+                  <div class="ai-bbl-ai">${_t('ai.chat.greeting')}</div>
+                  <p style="font-size:10px;color:#94a3b8;margin:3px 0 0 4px;">${_t('ai.chat.just.now')}</p>
                 </div>
               </div>
             </div>
           </div>
           <div class="ai-chat-chips">
-            <button class="ai-chip" data-aiq="如何借阅电子书？">如何借阅？</button>
-            <button class="ai-chip" data-aiq="如何续借书籍？">如何续借？</button>
-            <button class="ai-chip" data-aiq="如何推送到Kindle？">推送Kindle</button>
-            <button class="ai-chip" data-aiq="借阅额度是多少？">借阅额度</button>
-            <button class="ai-chip" data-aiq="忘记借书证号怎么办？">忘记证号</button>
-            <button class="ai-chip" data-aiq="支持哪些阅读器？">支持设备</button>
-            <button class="ai-chip" data-aiq="逾期会有罚款吗？">逾期政策</button>
+            <button class="ai-chip" data-aiq="${_t('ai.chip.borrow.q')}">${_t('ai.chip.borrow')}</button>
+            <button class="ai-chip" data-aiq="${_t('ai.chip.renew.q')}">${_t('ai.chip.renew')}</button>
+            <button class="ai-chip" data-aiq="${_t('ai.chip.kindle.q')}">${_t('ai.chip.kindle')}</button>
+            <button class="ai-chip" data-aiq="${_t('ai.chip.quota.q')}">${_t('ai.chip.quota')}</button>
+            <button class="ai-chip" data-aiq="${_t('ai.chip.card.q')}">${_t('ai.chip.card')}</button>
+            <button class="ai-chip" data-aiq="${_t('ai.chip.device.q')}">${_t('ai.chip.device')}</button>
+            <button class="ai-chip" data-aiq="${_t('ai.chip.overdue.q')}">${_t('ai.chip.overdue')}</button>
           </div>
           <div class="ai-chat-ft">
             <textarea id="ai-chat-input" rows="1"
               style="flex:1;resize:none;border:1px solid #e2e8f0;border-radius:14px;padding:8px 12px;font-size:13px;font-family:inherit;outline:none;transition:border-color .15s;max-height:90px;"
-              placeholder="输入您的问题..."
+              placeholder="${_t('ai.chat.placeholder')}"
               onfocus="this.style.borderColor='#0f4c81'"
               onblur="this.style.borderColor='#e2e8f0'"></textarea>
             <button id="ai-send-btn" style="width:36px;height:36px;border-radius:50%;background:#0f4c81;border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0;">
@@ -212,5 +264,13 @@ $(function () {
     }
 
     $('#ai-fab').on('click', openAIChat);
+
+    // 语言切换时更新 FAB 标签
+    $(document).on('nlb:langchange', function() {
+      $('#ai-fab-label').text(_t('ai.chat.fab.label'));
+      $('#ai-fab').attr('title', _t('ai.chat.fab.title'));
+      const btn = document.getElementById('lang-toggle-btn');
+      if (btn) btn.textContent = _t('lang.toggle');
+    });
   }
 });

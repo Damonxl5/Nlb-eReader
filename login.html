@@ -40,67 +40,67 @@ tailwind.config = {
       <i class="fas fa-book-open text-2xl" style="color:#0f4c81"></i>
     </div>
     <h1 class="text-3xl font-bold text-white">NLB eReads</h1>
-    <p class="text-blue-200 mt-1 text-sm">新加坡国家图书馆 · 正版电子书平台</p>
+    <p class="text-blue-200 mt-1 text-sm" data-i18n="app.tagline">新加坡国家图书馆 · 正版电子书平台</p>
   </div>
 
   <!-- Card -->
   <div class="bg-white rounded-3xl card-shadow p-8">
     <!-- Tabs -->
     <div class="flex border-b border-gray-100 mb-6">
-      <button class="tab-btn tab-active flex-1 pb-3 text-sm" data-tab="card">借书证登录</button>
-      <button class="tab-btn flex-1 pb-3 text-sm text-gray-400 hover:text-gray-600" data-tab="mobile">手机验证码</button>
-      <button class="tab-btn flex-1 pb-3 text-sm text-gray-400 hover:text-gray-600" data-tab="nlb">NLB Mobile</button>
+      <button class="tab-btn tab-active flex-1 pb-3 text-sm" data-tab="card" data-i18n="login.tab.card">借书证登录</button>
+      <button class="tab-btn flex-1 pb-3 text-sm text-gray-400 hover:text-gray-600" data-tab="mobile" data-i18n="login.tab.mobile">手机验证码</button>
+      <button class="tab-btn flex-1 pb-3 text-sm text-gray-400 hover:text-gray-600" data-tab="nlb" data-i18n="login.tab.nlb">NLB Mobile</button>
     </div>
 
     <!-- Tab: Card -->
     <div class="tab-panel" id="panel-card">
       <div class="mb-4">
-        <label class="block text-sm font-medium text-gray-700 mb-2">借书证号</label>
+        <label class="block text-sm font-medium text-gray-700 mb-2" data-i18n="login.card.label">借书证号</label>
         <div class="relative">
           <i class="fas fa-id-card absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 text-sm"></i>
-          <input type="text" placeholder="请输入借书证号码" class="input-focus w-full pl-10 pr-4 py-3 border border-gray-200 rounded-xl text-sm bg-gray-50">
+          <input type="text" data-i18n-placeholder="login.card.placeholder" placeholder="请输入借书证号码" class="input-focus w-full pl-10 pr-4 py-3 border border-gray-200 rounded-xl text-sm bg-gray-50">
         </div>
       </div>
       <div class="mb-4">
-        <label class="block text-sm font-medium text-gray-700 mb-2">密码 / PIN</label>
+        <label class="block text-sm font-medium text-gray-700 mb-2" data-i18n="login.pwd.label">密码 / PIN</label>
         <div class="relative">
           <i class="fas fa-lock absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 text-sm"></i>
-          <input type="password" id="pwd-input" placeholder="请输入密码" class="input-focus w-full pl-10 pr-10 py-3 border border-gray-200 rounded-xl text-sm bg-gray-50">
+          <input type="password" id="pwd-input" data-i18n-placeholder="login.pwd.placeholder" placeholder="请输入密码" class="input-focus w-full pl-10 pr-10 py-3 border border-gray-200 rounded-xl text-sm bg-gray-50">
           <i class="fas fa-eye absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 cursor-pointer text-sm" id="toggle-pwd"></i>
         </div>
       </div>
       <div class="flex items-center justify-between mb-6 text-sm">
         <label class="flex items-center gap-2 text-gray-600 cursor-pointer">
-          <input type="checkbox" class="rounded border-gray-300"> 记住登录
+          <input type="checkbox" class="rounded border-gray-300"> <span data-i18n="login.remember">记住登录</span>
         </label>
-        <a href="#" class="text-blue-700 hover:underline">忘记密码？</a>
+        <a href="#" class="text-blue-700 hover:underline" data-i18n="login.forgot">忘记密码？</a>
       </div>
       <button id="btn-login" class="btn-primary w-full py-3 text-white rounded-xl font-semibold text-sm">
-        <i class="fas fa-sign-in-alt mr-2"></i>登录平台
+        <i class="fas fa-sign-in-alt mr-2"></i><span data-i18n="login.btn">登录平台</span>
       </button>
     </div>
 
     <!-- Tab: Mobile -->
     <div class="tab-panel hidden" id="panel-mobile">
       <div class="mb-4">
-        <label class="block text-sm font-medium text-gray-700 mb-2">手机号码</label>
+        <label class="block text-sm font-medium text-gray-700 mb-2" data-i18n="login.mobile.phone.label">手机号码</label>
         <div class="relative">
           <i class="fas fa-mobile-alt absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 text-sm"></i>
-          <input type="tel" placeholder="+65 请输入手机号" class="input-focus w-full pl-10 pr-4 py-3 border border-gray-200 rounded-xl text-sm bg-gray-50">
+          <input type="tel" data-i18n-placeholder="login.mobile.phone.placeholder" placeholder="+65 请输入手机号" class="input-focus w-full pl-10 pr-4 py-3 border border-gray-200 rounded-xl text-sm bg-gray-50">
         </div>
       </div>
       <div class="mb-6">
-        <label class="block text-sm font-medium text-gray-700 mb-2">验证码</label>
+        <label class="block text-sm font-medium text-gray-700 mb-2" data-i18n="login.mobile.code.label">验证码</label>
         <div class="flex gap-2">
           <div class="relative flex-1">
             <i class="fas fa-shield-alt absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 text-sm"></i>
-            <input type="text" placeholder="6位验证码" class="input-focus w-full pl-10 pr-4 py-3 border border-gray-200 rounded-xl text-sm bg-gray-50">
+            <input type="text" data-i18n-placeholder="login.mobile.code.placeholder" placeholder="6位验证码" class="input-focus w-full pl-10 pr-4 py-3 border border-gray-200 rounded-xl text-sm bg-gray-50">
           </div>
-          <button id="btn-send-code" class="px-4 py-3 border border-blue-700 text-blue-700 rounded-xl text-sm font-medium hover:bg-blue-50 whitespace-nowrap">发送验证码</button>
+          <button id="btn-send-code" class="px-4 py-3 border border-blue-700 text-blue-700 rounded-xl text-sm font-medium hover:bg-blue-50 whitespace-nowrap" data-i18n="login.mobile.send">发送验证码</button>
         </div>
       </div>
       <button class="btn-login-mobile btn-primary w-full py-3 text-white rounded-xl font-semibold text-sm">
-        <i class="fas fa-sign-in-alt mr-2"></i>验证登录
+        <i class="fas fa-sign-in-alt mr-2"></i><span data-i18n="login.mobile.btn">验证登录</span>
       </button>
     </div>
 
@@ -110,14 +110,14 @@ tailwind.config = {
         <div class="w-32 h-32 bg-gray-100 rounded-2xl mx-auto mb-4 flex items-center justify-center">
           <i class="fas fa-qrcode text-5xl text-gray-400"></i>
         </div>
-        <p class="text-sm text-gray-600 mb-2">使用 NLB Mobile App 扫码登录</p>
-        <p class="text-xs text-gray-400">打开 NLB Mobile → 扫一扫 → 扫描此二维码</p>
+        <p class="text-sm text-gray-600 mb-2" data-i18n="login.nlb.scan">使用 NLB Mobile App 扫码登录</p>
+        <p class="text-xs text-gray-400" data-i18n="login.nlb.hint">打开 NLB Mobile → 扫一扫 → 扫描此二维码</p>
         <button id="btn-refresh-qr" class="mt-4 text-sm text-blue-700 hover:underline">
-          <i class="fas fa-sync-alt mr-1"></i>刷新二维码
+          <i class="fas fa-sync-alt mr-1"></i><span data-i18n="login.nlb.refresh">刷新二维码</span>
         </button>
         <div class="mt-5">
           <button class="btn-login-nlb btn-primary w-full py-3 text-white rounded-xl font-semibold text-sm">
-            <i class="fas fa-check-circle mr-2"></i>已扫码，进入平台
+            <i class="fas fa-check-circle mr-2"></i><span data-i18n="login.nlb.btn">已扫码，进入平台</span>
           </button>
         </div>
       </div>
@@ -126,17 +126,17 @@ tailwind.config = {
     <!-- Divider -->
     <div class="flex items-center my-5">
       <div class="flex-1 border-t border-gray-100"></div>
-      <span class="px-3 text-xs text-gray-400">其他方式</span>
+      <span class="px-3 text-xs text-gray-400" data-i18n="login.other">其他方式</span>
       <div class="flex-1 border-t border-gray-100"></div>
     </div>
 
     <!-- Quick Options -->
     <div class="grid grid-cols-2 gap-3 mb-5">
       <button class="flex items-center justify-center gap-2 py-2.5 border border-gray-200 rounded-xl text-sm text-gray-600 hover:bg-gray-50 transition">
-        <i class="fas fa-qrcode text-primary"></i>扫码登录
+        <i class="fas fa-qrcode text-primary"></i><span data-i18n="login.qr">扫码登录</span>
       </button>
       <button class="flex items-center justify-center gap-2 py-2.5 border border-gray-200 rounded-xl text-sm text-gray-600 hover:bg-gray-50 transition">
-        <i class="fas fa-users text-green-500"></i>家属代绑
+        <i class="fas fa-users text-green-500"></i><span data-i18n="login.family">家属代绑</span>
       </button>
     </div>
 
@@ -145,24 +145,25 @@ tailwind.config = {
       <div class="flex items-center gap-3">
         <i class="fas fa-universal-access text-primary"></i>
         <div>
-          <p class="text-sm font-medium text-gray-700">无障碍辅助入口</p>
-          <p class="text-xs text-gray-500 mt-0.5">大字模式 · 语音朗读 · 高对比度</p>
+          <p class="text-sm font-medium text-gray-700" data-i18n="login.access.title">无障碍辅助入口</p>
+          <p class="text-xs text-gray-500 mt-0.5" data-i18n="login.access.desc">大字模式 · 语音朗读 · 高对比度</p>
         </div>
-        <button class="ml-auto text-xs text-primary font-medium hover:underline">开启</button>
+        <button class="ml-auto text-xs text-primary font-medium hover:underline" data-i18n="login.access.btn">开启</button>
       </div>
     </div>
 
     <p class="text-center text-xs text-gray-400">
-      持有效借书证可<span class="text-primary font-medium">免费借阅</span>所有电子书
-      · <a href="#" class="hover:underline">办证指引</a>
+      <span data-i18n="login.free">持有效借书证可</span><span class="text-primary font-medium" data-i18n="login.free.highlight">免费借阅</span><span data-i18n="login.free.suffix">所有电子书</span>
+      · <a href="#" class="hover:underline" data-i18n="login.guide">办证指引</a>
     </p>
   </div>
 
-  <p class="text-center text-blue-200 text-xs mt-6">
+  <p class="text-center text-blue-200 text-xs mt-6" data-i18n="login.copyright">
     © 2025 National Library Board Singapore · 版权合规平台
   </p>
 </div>
 
+<script src="i18n.js"></script>
 <script src="nav.js"></script>
 <script>
 $(function () {
@@ -193,20 +194,20 @@ $(function () {
     const $btn = $(this);
     $btn.prop('disabled', true).addClass('opacity-50 cursor-not-allowed');
     const timer = setInterval(function () {
-      $btn.text(count + 's 后重发');
+      $btn.text(t('login.countdown', {n: count}));
       count--;
       if (count < 0) {
         clearInterval(timer);
-        $btn.text('发送验证码').prop('disabled', false).removeClass('opacity-50 cursor-not-allowed');
+        $btn.text(t('login.mobile.send')).prop('disabled', false).removeClass('opacity-50 cursor-not-allowed');
       }
     }, 1000);
   });
 
   // Refresh QR
   $('#btn-refresh-qr').on('click', function () {
-    $(this).html('<i class="fas fa-spinner fa-spin mr-1"></i>刷新中...');
+    $(this).html(`<i class="fas fa-spinner fa-spin mr-1"></i>${t('login.nlb.refreshing')}`);
     setTimeout(() => {
-      $(this).html('<i class="fas fa-sync-alt mr-1"></i>刷新二维码');
+      $(this).html(`<i class="fas fa-sync-alt mr-1"></i>${t('login.nlb.refresh')}`);
     }, 1500);
   });
 });

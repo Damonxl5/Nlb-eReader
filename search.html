@@ -8,6 +8,7 @@
 <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<script src="i18n.js"></script>
 <script src="nav.js"></script>
 <script>tailwind.config={theme:{extend:{colors:{primary:'#0f4c81',accent:'#f97316'},fontFamily:{sans:['Inter','sans-serif']}}}}</script>
 <style>
@@ -48,11 +49,11 @@
   </div>
 </nav>
 
-<div class="max-w-7xl mx-auto px-4 py-5 flex gap-5">
+<div class="max-w-7xl mx-auto px-4 py-5 flex gap-5 min-w-0">
   <!-- Sidebar -->
   <aside class="w-56 flex-shrink-0 hidden lg:block">
     <div class="bg-white rounded-2xl p-4 shadow-sm mb-4">
-      <h3 class="font-semibold text-gray-800 text-sm mb-3">语种</h3>
+      <h3 class="font-semibold text-gray-800 text-sm mb-3" data-i18n="search.filter.lang">语种</h3>
       <div class="space-y-2">
         <label class="flex items-center gap-2 text-sm text-gray-600 cursor-pointer"><input type="checkbox" class="rounded" data-filter="lang" data-val="中文"> 中文 <span class="ml-auto text-xs text-gray-400">1,234</span></label>
         <label class="flex items-center gap-2 text-sm text-gray-600 cursor-pointer"><input type="checkbox" class="rounded" data-filter="lang" data-val="English"> English <span class="ml-auto text-xs text-gray-400">892</span></label>
@@ -61,7 +62,7 @@
       </div>
     </div>
     <div class="bg-white rounded-2xl p-4 shadow-sm mb-4">
-      <h3 class="font-semibold text-gray-800 text-sm mb-3">分类</h3>
+      <h3 class="font-semibold text-gray-800 text-sm mb-3" data-i18n="search.filter.cat">分类</h3>
       <div class="space-y-2">
         <label class="flex items-center gap-2 text-sm text-gray-600 cursor-pointer"><input type="checkbox" class="rounded" data-filter="cat" data-val="history"> 历史人文</label>
         <label class="flex items-center gap-2 text-sm text-gray-600 cursor-pointer"><input type="checkbox" class="rounded" data-filter="cat" data-val="fiction"> 文学小说</label>
@@ -81,7 +82,7 @@
       </div>
     </div>
     <div class="bg-white rounded-2xl p-4 shadow-sm">
-      <h3 class="font-semibold text-gray-800 text-sm mb-3">借阅状态</h3>
+      <h3 class="font-semibold text-gray-800 text-sm mb-3" data-i18n="search.filter.status">借阅状态</h3>
       <div class="space-y-2">
         <label class="flex items-center gap-2 text-sm text-gray-600 cursor-pointer"><input type="checkbox" class="rounded" data-filter="status" data-val="available"> 可借阅</label>
         <label class="flex items-center gap-2 text-sm text-gray-600 cursor-pointer"><input type="checkbox" class="rounded" data-filter="status" data-val="reserve"> 预约中</label>
@@ -128,7 +129,7 @@
         </div>
         <div class="p-3">
           <div class="flex items-center justify-between mb-1">
-            <span class="status-available text-xs px-2 py-0.5 rounded-full font-medium">可借阅</span>
+            <span class="status-available text-xs px-2 py-0.5 rounded-full font-medium" data-i18n="home.status.available">可借阅</span>
             <div class="flex items-center gap-0.5"><i class="fas fa-star text-amber-400 text-xs"></i><span class="text-xs text-gray-600 ml-0.5">4.8</span></div>
           </div>
           <p class="text-xs text-gray-400 mt-1">历史人文 · 中文</p>
@@ -142,7 +143,7 @@
         </div>
         <div class="p-3">
           <div class="flex items-center justify-between mb-1">
-            <span class="status-available text-xs px-2 py-0.5 rounded-full font-medium">可借阅</span>
+            <span class="status-available text-xs px-2 py-0.5 rounded-full font-medium" data-i18n="home.status.available">可借阅</span>
             <div class="flex items-center gap-0.5"><i class="fas fa-star text-amber-400 text-xs"></i><span class="text-xs text-gray-600 ml-0.5">4.6</span></div>
           </div>
           <p class="text-xs text-gray-400 mt-1">历史人文 · 中文</p>
@@ -156,7 +157,7 @@
         </div>
         <div class="p-3">
           <div class="flex items-center justify-between mb-1">
-            <span class="status-borrowed text-xs px-2 py-0.5 rounded-full font-medium">已借完</span>
+            <span class="status-borrowed text-xs px-2 py-0.5 rounded-full font-medium" data-i18n="home.status.borrowed">已借完</span>
             <div class="flex items-center gap-0.5"><i class="fas fa-star text-amber-400 text-xs"></i><span class="text-xs text-gray-600 ml-0.5">4.9</span></div>
           </div>
           <p class="text-xs text-gray-400 mt-1">历史人文 · 中文</p>
@@ -170,7 +171,7 @@
         </div>
         <div class="p-3">
           <div class="flex items-center justify-between mb-1">
-            <span class="status-available text-xs px-2 py-0.5 rounded-full font-medium">可借阅</span>
+            <span class="status-available text-xs px-2 py-0.5 rounded-full font-medium" data-i18n="home.status.available">可借阅</span>
             <div class="flex items-center gap-0.5"><i class="fas fa-star text-amber-400 text-xs"></i><span class="text-xs text-gray-600 ml-0.5">4.7</span></div>
           </div>
           <p class="text-xs text-gray-400 mt-1">History · English</p>
@@ -184,7 +185,7 @@
         </div>
         <div class="p-3">
           <div class="flex items-center justify-between mb-1">
-            <span class="status-reserve text-xs px-2 py-0.5 rounded-full font-medium">预约中</span>
+            <span class="status-reserve text-xs px-2 py-0.5 rounded-full font-medium" data-i18n="home.status.reserved">预约中</span>
             <div class="flex items-center gap-0.5"><i class="fas fa-star text-amber-400 text-xs"></i><span class="text-xs text-gray-600 ml-0.5">4.5</span></div>
           </div>
           <p class="text-xs text-gray-400 mt-1">历史人文 · 中文</p>
@@ -198,7 +199,7 @@
         </div>
         <div class="p-3">
           <div class="flex items-center justify-between mb-1">
-            <span class="status-available text-xs px-2 py-0.5 rounded-full font-medium">可借阅</span>
+            <span class="status-available text-xs px-2 py-0.5 rounded-full font-medium" data-i18n="home.status.available">可借阅</span>
             <div class="flex items-center gap-0.5"><i class="fas fa-star text-amber-400 text-xs"></i><span class="text-xs text-gray-600 ml-0.5">4.6</span></div>
           </div>
           <p class="text-xs text-gray-400 mt-1">历史人文 · 中文</p>
@@ -212,7 +213,7 @@
         </div>
         <div class="p-3">
           <div class="flex items-center justify-between mb-1">
-            <span class="status-available text-xs px-2 py-0.5 rounded-full font-medium">可借阅</span>
+            <span class="status-available text-xs px-2 py-0.5 rounded-full font-medium" data-i18n="home.status.available">可借阅</span>
             <div class="flex items-center gap-0.5"><i class="fas fa-star text-amber-400 text-xs"></i><span class="text-xs text-gray-600 ml-0.5">4.9</span></div>
           </div>
           <p class="text-xs text-gray-400 mt-1">历史人文 · 中文</p>
@@ -226,7 +227,7 @@
         </div>
         <div class="p-3">
           <div class="flex items-center justify-between mb-1">
-            <span class="status-available text-xs px-2 py-0.5 rounded-full font-medium">可借阅</span>
+            <span class="status-available text-xs px-2 py-0.5 rounded-full font-medium" data-i18n="home.status.available">可借阅</span>
             <div class="flex items-center gap-0.5"><i class="fas fa-star text-amber-400 text-xs"></i><span class="text-xs text-gray-600 ml-0.5">4.8</span></div>
           </div>
           <p class="text-xs text-gray-400 mt-1">History · English</p>
@@ -371,9 +372,9 @@ const CAT_LABELS = {
 };
 
 const STATUS_HTML = {
-  available: '<span class="status-available text-xs px-2 py-0.5 rounded-full font-medium">可借阅</span>',
-  borrowed:  '<span class="status-borrowed text-xs px-2 py-0.5 rounded-full font-medium">已借完</span>',
-  reserve:   '<span class="status-reserve text-xs px-2 py-0.5 rounded-full font-medium">预约中</span>',
+  available: '<span class="status-available text-xs px-2 py-0.5 rounded-full font-medium" data-i18n="home.status.available">可借阅</span>',
+  borrowed:  '<span class="status-borrowed text-xs px-2 py-0.5 rounded-full font-medium" data-i18n="home.status.borrowed">已借完</span>',
+  reserve:   '<span class="status-reserve text-xs px-2 py-0.5 rounded-full font-medium" data-i18n="home.status.reserved">预约中</span>',
 };
 const BTN_HTML = {
   available: '<button class="mt-2 w-full py-1.5 text-white text-xs rounded-lg font-medium hover:opacity-90" style="background:#0f4c81">立即借阅</button>',

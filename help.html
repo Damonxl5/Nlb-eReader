@@ -23,6 +23,7 @@ tailwind.config = {
   .card-hover { transition:all 0.2s; }
   .card-hover:hover { transform:translateY(-2px); box-shadow:0 8px 24px rgba(15,76,129,0.1); }
 </style>
+<script src="i18n.js"></script>
 <script src="nav.js"></script>
 </head>
 <body class="min-h-screen">
@@ -215,7 +216,7 @@ tailwind.config = {
         </div>
 
         <!-- Chat Messages -->
-        <div id="chat-messages" class="p-4 space-y-3 h-64 overflow-y-auto bg-gray-50">
+        <div id="chat-messages" class="p-4 space-y-3 min-h-[180px] max-h-64 overflow-y-auto bg-gray-50">
           <div class="flex gap-2">
             <div class="w-7 h-7 bg-primary rounded-full flex items-center justify-center flex-shrink-0">
               <i class="fas fa-robot text-white text-xs"></i>
