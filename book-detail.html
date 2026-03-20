@@ -1,0 +1,497 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>书籍详情 - NLB eReads</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<script>
+tailwind.config = {
+  theme: { extend: { colors: { primary: '#0f4c81', accent: '#f97316' }, fontFamily: { sans: ['Inter','sans-serif'] } } }
+}
+</script>
+<style>
+  body { font-family:'Inter',sans-serif; background:#f8fafc; }
+  .nav-shadow { box-shadow:0 2px 20px rgba(15,76,129,0.08); }
+  .card-hover { transition:all 0.2s; }
+  .card-hover:hover { transform:translateY(-3px); box-shadow:0 8px 24px rgba(15,76,129,0.12); }
+  .tab-active { border-bottom:2px solid #0f4c81; color:#0f4c81; font-weight:600; }
+  .btn-primary { background:#0f4c81; transition:all 0.2s; }
+  .btn-primary:hover { background:#0a3560; }
+  .device-card:hover { border-color:#0f4c81; background:#f0f7ff; }
+</style>
+<script src="nav.js"></script>
+</head>
+<body class="min-h-screen">
+
+<!-- Nav -->
+<nav class="bg-white nav-shadow sticky top-0 z-50">
+  <div class="max-w-7xl mx-auto px-4 h-14 flex items-center gap-4">
+    <button class="flex items-center gap-2 text-gray-600 hover:text-primary transition" data-nav="search">
+      <i class="fas fa-arrow-left"></i>
+      <span class="text-sm hidden sm:block">返回搜索</span>
+    </button>
+    <div class="flex-1 flex items-center justify-center">
+      <a href="#" class="flex items-center gap-2" data-nav="home">
+        <div class="w-7 h-7 bg-primary rounded-lg flex items-center justify-center">
+          <i class="fas fa-book-open text-white text-xs"></i>
+        </div>
+        <span class="font-bold text-primary hidden sm:block">NLB eReads</span>
+      </a>
+    </div>
+    <div class="flex items-center gap-2">
+      <button class="p-2 text-gray-500 hover:text-primary"><i class="fas fa-share-alt"></i></button>
+      <div class="w-8 h-8 bg-primary rounded-full flex items-center justify-center">
+        <span class="text-white text-xs font-bold">陈</span>
+      </div>
+    </div>
+  </div>
+</nav>
+
+<div class="max-w-7xl mx-auto px-4 py-6">
+  <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+
+    <!-- Left: Book Info -->
+    <div class="lg:col-span-2">
+      <!-- Book Header -->
+      <div class="bg-white rounded-2xl p-6 shadow-sm mb-5">
+        <div class="flex gap-6">
+          <!-- Cover -->
+          <div class="flex-shrink-0">
+            <div class="w-32 h-44 rounded-xl shadow-lg flex items-end p-3" style="background:linear-gradient(135deg,#0f4c81,#1a6bb5)">
+              <div>
+                <p class="text-white font-bold text-xs leading-tight">新加坡史</p>
+                <p class="text-blue-200 text-xs mt-0.5">柯木林</p>
+              </div>
+            </div>
+            <div class="flex justify-center gap-2 mt-3">
+              <button class="text-gray-400 hover:text-red-500 transition"><i class="fas fa-heart text-lg"></i></button>
+              <button class="text-gray-400 hover:text-primary transition"><i class="fas fa-bookmark text-lg"></i></button>
+              <button class="text-gray-400 hover:text-green-500 transition"><i class="fas fa-share-alt text-lg"></i></button>
+            </div>
+          </div>
+
+          <!-- Info -->
+          <div class="flex-1 min-w-0">
+            <div class="flex items-start justify-between gap-2">
+              <div>
+                <h1 class="text-xl font-bold text-gray-900 leading-tight">新加坡史</h1>
+                <p class="text-gray-500 mt-1">柯木林 著 · 联合早报出版社</p>
+              </div>
+              <span class="flex-shrink-0 bg-green-100 text-green-700 text-xs px-3 py-1 rounded-full font-medium">可借阅</span>
+            </div>
+
+            <div class="flex items-center gap-3 mt-3">
+              <div class="flex items-center gap-1">
+                <i class="fas fa-star text-amber-400 text-sm"></i>
+                <i class="fas fa-star text-amber-400 text-sm"></i>
+                <i class="fas fa-star text-amber-400 text-sm"></i>
+                <i class="fas fa-star text-amber-400 text-sm"></i>
+                <i class="fas fa-star-half-alt text-amber-400 text-sm"></i>
+                <span class="text-sm font-semibold text-gray-700 ml-1">4.8</span>
+              </div>
+              <span class="text-sm text-gray-400">2,341 次借阅</span>
+              <span class="text-sm text-gray-400">· 156 条评论</span>
+            </div>
+
+            <div class="flex flex-wrap gap-2 mt-3">
+              <span class="bg-amber-50 text-amber-700 text-xs px-3 py-1 rounded-full">本地特色</span>
+              <span class="bg-blue-50 text-blue-700 text-xs px-3 py-1 rounded-full">历史人文</span>
+              <span class="bg-gray-100 text-gray-600 text-xs px-3 py-1 rounded-full">中文</span>
+            </div>
+
+            <div class="grid grid-cols-3 gap-3 mt-4 text-center">
+              <div class="bg-gray-50 rounded-xl p-2">
+                <p class="text-xs text-gray-400">出版年份</p>
+                <p class="text-sm font-semibold text-gray-700 mt-0.5">2021</p>
+              </div>
+              <div class="bg-gray-50 rounded-xl p-2">
+                <p class="text-xs text-gray-400">页数</p>
+                <p class="text-sm font-semibold text-gray-700 mt-0.5">456页</p>
+              </div>
+              <div class="bg-gray-50 rounded-xl p-2">
+                <p class="text-xs text-gray-400">ISBN</p>
+                <p class="text-sm font-semibold text-gray-700 mt-0.5">978-981-XXX</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Tabs -->
+      <div class="bg-white rounded-2xl shadow-sm overflow-hidden mb-5">
+        <div class="flex border-b border-gray-100 px-4" id="detail-tabs">
+          <button onclick="switchDetailTab(this,'intro')" class="tab-active py-3 px-4 text-sm">简介</button>
+          <button onclick="switchDetailTab(this,'toc')" class="py-3 px-4 text-sm text-gray-500 hover:text-gray-700">目录</button>
+          <button onclick="switchDetailTab(this,'preview')" class="py-3 px-4 text-sm text-gray-500 hover:text-gray-700">试读</button>
+          <button onclick="switchDetailTab(this,'reviews')" class="py-3 px-4 text-sm text-gray-500 hover:text-gray-700">评论</button>
+        </div>
+
+        <!-- Intro -->
+        <div id="tab-intro" class="p-5">
+          <h3 class="font-semibold text-gray-800 mb-3">内容简介</h3>
+          <p class="text-sm text-gray-600 leading-relaxed">
+            本书是迄今为止最为全面、系统的新加坡历史著作之一。作者柯木林以严谨的学术态度，从史前时代到现代新加坡的建立，全面梳理了这座城市国家的历史脉络。
+          </p>
+          <p class="text-sm text-gray-600 leading-relaxed mt-3">
+            书中不仅涵盖政治、经济的宏观叙述，更深入探讨了华人、马来人、印度人等多元族群的文化融合历程，以及殖民时代、日据时期、独立建国等关键历史节点的深刻影响。
+          </p>
+          <button class="text-primary text-sm mt-3 hover:underline">展开全文 <i class="fas fa-chevron-down text-xs"></i></button>
+
+          <div class="mt-4 pt-4 border-t border-gray-100">
+            <h4 class="font-semibold text-gray-800 mb-2 text-sm">作者简介</h4>
+            <div class="flex items-start gap-3">
+              <div class="w-10 h-10 bg-primary rounded-full flex items-center justify-center flex-shrink-0">
+                <span class="text-white text-sm font-bold">柯</span>
+              </div>
+              <div>
+                <p class="text-sm font-medium text-gray-800">柯木林</p>
+                <p class="text-xs text-gray-500 mt-0.5">新加坡著名历史学家，南洋大学历史系教授，专注于东南亚华人史研究逾40年。</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- TOC (hidden) -->
+        <div id="tab-toc" class="p-5 hidden">
+          <div class="space-y-2">
+            <div class="flex items-center justify-between py-2 border-b border-gray-50 hover:bg-gray-50 rounded-lg px-2 cursor-pointer">
+              <span class="text-sm text-gray-700">第一章：史前新加坡</span>
+              <span class="text-xs text-gray-400">第1页</span>
+            </div>
+            <div class="flex items-center justify-between py-2 border-b border-gray-50 hover:bg-gray-50 rounded-lg px-2 cursor-pointer">
+              <span class="text-sm text-gray-700">第二章：淡马锡时代</span>
+              <span class="text-xs text-gray-400">第28页</span>
+            </div>
+            <div class="flex items-center justify-between py-2 border-b border-gray-50 hover:bg-gray-50 rounded-lg px-2 cursor-pointer">
+              <span class="text-sm text-gray-700">第三章：英国殖民统治</span>
+              <span class="text-xs text-gray-400">第67页</span>
+            </div>
+            <div class="flex items-center justify-between py-2 border-b border-gray-50 hover:bg-gray-50 rounded-lg px-2 cursor-pointer">
+              <span class="text-sm text-gray-700">第四章：日据时期</span>
+              <span class="text-xs text-gray-400">第134页</span>
+            </div>
+            <div class="flex items-center justify-between py-2 border-b border-gray-50 hover:bg-gray-50 rounded-lg px-2 cursor-pointer">
+              <span class="text-sm text-gray-700">第五章：独立建国</span>
+              <span class="text-xs text-gray-400">第198页</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Preview (hidden) -->
+        <div id="tab-preview" class="p-5 hidden">
+          <div class="bg-amber-50 border border-amber-200 rounded-xl p-3 mb-4 text-sm text-amber-700">
+            <i class="fas fa-info-circle mr-2"></i>试读前3章，借阅后可阅读全文
+          </div>
+          <div class="prose text-sm text-gray-700 leading-relaxed">
+            <p class="font-semibold mb-2">第一章：史前新加坡</p>
+            <p>新加坡，这座位于马来半岛南端的岛屿，其历史远比许多人想象的更为悠久。考古发掘表明，早在公元前11世纪，这片土地上便已有人类活动的痕迹...</p>
+          </div>
+          <button class="mt-4 btn-primary text-white px-6 py-2.5 rounded-xl text-sm font-medium w-full">
+            <i class="fas fa-book-reader mr-2"></i>借阅后阅读全文
+          </button>
+        </div>
+
+        <!-- Reviews (hidden) -->
+        <div id="tab-reviews" class="p-5 hidden">
+          <div class="space-y-4">
+            <div class="border-b border-gray-100 pb-4">
+              <div class="flex items-center gap-2 mb-2">
+                <div class="w-8 h-8 bg-blue-100 rounded-full flex items-center justify-center">
+                  <span class="text-primary text-xs font-bold">张</span>
+                </div>
+                <div>
+                  <p class="text-sm font-medium text-gray-800">张**</p>
+                  <div class="flex gap-0.5">
+                    <i class="fas fa-star text-amber-400 text-xs"></i>
+                    <i class="fas fa-star text-amber-400 text-xs"></i>
+                    <i class="fas fa-star text-amber-400 text-xs"></i>
+                    <i class="fas fa-star text-amber-400 text-xs"></i>
+                    <i class="fas fa-star text-amber-400 text-xs"></i>
+                  </div>
+                </div>
+                <span class="ml-auto text-xs text-gray-400">2025-03-10</span>
+              </div>
+              <p class="text-sm text-gray-600">非常详尽的新加坡历史著作，资料翔实，叙述生动，强烈推荐！</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Physical Library Info -->
+      <div class="bg-white rounded-2xl p-5 shadow-sm">
+        <h3 class="font-semibold text-gray-800 mb-4 flex items-center gap-2">
+          <i class="fas fa-map-marker-alt text-primary text-sm"></i>实体馆藏信息
+        </h3>
+        <div class="space-y-3">
+          <div class="flex items-center justify-between py-2 border-b border-gray-50">
+            <div>
+              <p class="text-sm font-medium text-gray-800">国家图书馆（维多利亚街）</p>
+              <p class="text-xs text-gray-400 mt-0.5">参考馆藏 · 3楼中文区</p>
+            </div>
+            <span class="text-xs text-green-600 font-medium bg-green-50 px-2 py-1 rounded-full">2册可借</span>
+          </div>
+          <div class="flex items-center justify-between py-2 border-b border-gray-50">
+            <div>
+              <p class="text-sm font-medium text-gray-800">裕廊区域图书馆</p>
+              <p class="text-xs text-gray-400 mt-0.5">流通馆藏 · 2楼</p>
+            </div>
+            <span class="text-xs text-orange-500 font-medium bg-orange-50 px-2 py-1 rounded-full">已借出</span>
+          </div>
+          <div class="flex items-center justify-between py-2">
+            <div>
+              <p class="text-sm font-medium text-gray-800">淡滨尼区域图书馆</p>
+              <p class="text-xs text-gray-400 mt-0.5">流通馆藏 · 3楼</p>
+            </div>
+            <span class="text-xs text-green-600 font-medium bg-green-50 px-2 py-1 rounded-full">1册可借</span>
+          </div>
+        </div>
+        <button class="mt-3 w-full py-2 border border-gray-200 rounded-xl text-sm text-gray-600 hover:bg-gray-50 transition">
+          <i class="fas fa-external-link-alt mr-2 text-xs"></i>在NLB官网预约实体书
+        </button>
+      </div>
+    </div>
+
+    <!-- Right: Actions -->
+    <div class="space-y-4">
+      <!-- Borrow Action -->
+      <div class="bg-white rounded-2xl p-5 shadow-sm">
+        <div class="flex items-center justify-between mb-4">
+          <span class="text-sm text-gray-500">借阅额度</span>
+          <span class="text-sm font-semibold text-gray-800">已用 3/8 本</span>
+        </div>
+        <div class="w-full bg-gray-100 rounded-full h-2 mb-4">
+          <div class="bg-primary h-2 rounded-full" style="width:37.5%"></div>
+        </div>
+        <button id="btn-borrow" class="btn-primary w-full py-3 text-white rounded-xl font-semibold text-sm mb-3" data-nav="reading">
+          <i class="fas fa-book-reader mr-2"></i>立即借阅（21天）
+        </button>
+        <button class="w-full py-2.5 border border-gray-200 rounded-xl text-sm text-gray-600 hover:bg-gray-50 transition mb-2">
+          <i class="fas fa-bookmark mr-2 text-primary"></i>加入书架（待读）
+        </button>
+        <button class="w-full py-2.5 border border-gray-200 rounded-xl text-sm text-gray-600 hover:bg-gray-50 transition">
+          <i class="fas fa-eye mr-2 text-gray-400"></i>试读前3章
+        </button>
+        <p class="text-center text-xs text-gray-400 mt-3">
+          <i class="fas fa-shield-alt text-green-500 mr-1"></i>正版授权 · 免费借阅
+        </p>
+      </div>
+
+      <!-- Device Push -->
+      <div class="bg-white rounded-2xl p-5 shadow-sm">
+        <h4 class="font-semibold text-gray-800 mb-3 flex items-center gap-2">
+          <i class="fas fa-tablet-alt text-primary text-sm"></i>推送至阅读器
+        </h4>
+        <div class="space-y-2">
+          <div class="device-card border border-gray-200 rounded-xl p-3 cursor-pointer transition flex items-center gap-3">
+            <div class="w-8 h-8 bg-gray-100 rounded-lg flex items-center justify-center">
+              <i class="fab fa-amazon text-gray-600"></i>
+            </div>
+            <div class="flex-1">
+              <p class="text-sm font-medium text-gray-800">Kindle Paperwhite</p>
+              <p class="text-xs text-gray-400">已绑定 · MOBI格式</p>
+            </div>
+            <i class="fas fa-chevron-right text-gray-300 text-xs"></i>
+          </div>
+          <div class="device-card border border-gray-200 rounded-xl p-3 cursor-pointer transition flex items-center gap-3">
+            <div class="w-8 h-8 bg-gray-100 rounded-lg flex items-center justify-center">
+              <i class="fas fa-tablet text-gray-600 text-sm"></i>
+            </div>
+            <div class="flex-1">
+              <p class="text-sm font-medium text-gray-800">文石 BOOX</p>
+              <p class="text-xs text-gray-400">已绑定 · EPUB格式</p>
+            </div>
+            <i class="fas fa-chevron-right text-gray-300 text-xs"></i>
+          </div>
+          <button class="w-full py-2 border border-dashed border-gray-300 rounded-xl text-xs text-gray-400 hover:border-primary hover:text-primary transition">
+            <i class="fas fa-plus mr-1"></i>绑定新设备
+          </button>
+        </div>
+        <button class="btn-push-device mt-3 w-full py-2.5 bg-gray-800 text-white rounded-xl text-sm font-medium hover:bg-gray-900 transition" data-nav="devices">
+          <i class="fas fa-paper-plane mr-2"></i>推送至设备
+        </button>
+      </div>
+
+      <!-- Download -->
+      <div class="bg-white rounded-2xl p-5 shadow-sm">
+        <h4 class="font-semibold text-gray-800 mb-3 flex items-center gap-2">
+          <i class="fas fa-download text-green-500 text-sm"></i>离线下载
+        </h4>
+        <div class="space-y-2">
+          <button class="w-full flex items-center justify-between py-2.5 px-3 border border-gray-200 rounded-xl hover:bg-gray-50 transition">
+            <span class="text-sm text-gray-700">EPUB 格式</span>
+            <span class="text-xs text-gray-400">2.3 MB</span>
+          </button>
+          <button class="w-full flex items-center justify-between py-2.5 px-3 border border-gray-200 rounded-xl hover:bg-gray-50 transition">
+            <span class="text-sm text-gray-700">PDF 格式</span>
+            <span class="text-xs text-gray-400">8.7 MB</span>
+          </button>
+        </div>
+        <p class="text-xs text-gray-400 mt-2 text-center">借阅后可下载离线阅读</p>
+      </div>
+
+      <!-- Related Books -->
+      <div class="bg-white rounded-2xl p-5 shadow-sm">
+        <h4 class="font-semibold text-gray-800 mb-3">相关推荐</h4>
+        <div class="space-y-3">
+          <div class="flex items-center gap-3 cursor-pointer hover:bg-gray-50 rounded-xl p-1.5 -mx-1.5 transition">
+            <div class="w-10 h-14 rounded-lg flex-shrink-0" style="background:linear-gradient(135deg,#7c3aed,#a855f7)"></div>
+            <div class="flex-1 min-w-0">
+              <p class="text-sm font-medium text-gray-800 truncate">从第三世界到第一世界</p>
+              <p class="text-xs text-gray-400">李光耀</p>
+            </div>
+          </div>
+          <div class="flex items-center gap-3 cursor-pointer hover:bg-gray-50 rounded-xl p-1.5 -mx-1.5 transition">
+            <div class="w-10 h-14 rounded-lg flex-shrink-0" style="background:linear-gradient(135deg,#059669,#10b981)"></div>
+            <div class="flex-1 min-w-0">
+              <p class="text-sm font-medium text-gray-800 truncate">狮城风云录</p>
+              <p class="text-xs text-gray-400">王赓武</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+function switchDetailTab(btn, name) {
+  document.querySelectorAll('#detail-tabs button').forEach(b => {
+    b.classList.remove('tab-active');
+    b.classList.add('text-gray-500');
+  });
+  btn.classList.add('tab-active');
+  btn.classList.remove('text-gray-500');
+  ['intro','toc','preview','reviews'].forEach(t => {
+    document.getElementById('tab-'+t).classList.add('hidden');
+  });
+  document.getElementById('tab-'+name).classList.remove('hidden');
+}
+</script>
+</body>
+</html>
+<script>
+$(function(){
+  // 全局 data-nav 跳转
+  $(document).on('click','[data-nav]',function(e){ e.preventDefault(); navigateTo($(this).data('nav')); });
+
+  // 立即借阅 → 阅读页（带借阅成功提示）
+  $('#btn-borrow').on('click', function(){
+    const $btn = $(this);
+    $btn.html('<i class="fas fa-spinner fa-spin mr-2"></i>借阅中...').prop('disabled', true);
+    setTimeout(function(){
+      $btn.html('<i class="fas fa-check mr-2"></i>借阅成功！').css('background','#16a34a');
+      setTimeout(function(){ navigateTo('reading'); }, 800);
+    }, 1000);
+  });
+
+  // 试读前3章 → 阅读页
+  $(document).on('click', 'button:contains("试读前3章")', function(){
+    navigateTo('reading');
+  });
+
+  // 试读 tab 内的开始阅读按钮
+  $(document).on('click', '#tab-preview .btn-primary', function(){
+    navigateTo('reading');
+  });
+
+  // 加入书架（待读）→ 书架，带反馈
+  $(document).on('click', 'button:contains("加入书架")', function(){
+    const $btn = $(this);
+    $btn.html('<i class="fas fa-check mr-2 text-green-500"></i>已加入书架').addClass('bg-green-50 border-green-200');
+    setTimeout(function(){ navigateTo('bookshelf'); }, 800);
+  });
+
+  // 收藏按钮（心形）toggle
+  $(document).on('click', '.fa-heart', function(){
+    $(this).toggleClass('text-gray-400 text-red-500 fas far');
+  });
+
+  // 书签按钮 toggle
+  $(document).on('click', '.fa-bookmark:not(#btn-borrow *)', function(){
+    $(this).toggleClass('text-gray-400 text-primary');
+  });
+
+  // 分享按钮
+  $(document).on('click', '.fa-share-alt', function(){
+    const $toast = $('<div class="fixed bottom-6 left-1/2 -translate-x-1/2 bg-gray-800 text-white text-sm px-5 py-2.5 rounded-xl shadow-lg z-50">链接已复制到剪贴板</div>');
+    $('body').append($toast);
+    setTimeout(function(){ $toast.fadeOut(300, function(){ $(this).remove(); }); }, 2000);
+  });
+
+  // 设备卡片点击 → 推送进度弹窗
+  $('.device-card').on('click', function(){
+    const deviceName = $(this).find('p.font-medium').text();
+    showPushModal(deviceName);
+  });
+
+  // 推送至设备按钮
+  $('.btn-push-device').on('click', function(){
+    showPushModal('已绑定设备');
+  });
+
+  // 绑定新设备 → 设备管理页
+  $(document).on('click', 'button:contains("绑定新设备")', function(){
+    navigateTo('devices');
+  });
+
+  // 下载按钮反馈
+  $(document).on('click', 'button:contains("EPUB 格式"), button:contains("PDF 格式")', function(){
+    const $btn = $(this);
+    const origHtml = $btn.html();
+    $btn.html('<span class="text-sm text-gray-700"><i class="fas fa-spinner fa-spin mr-2"></i>下载中...</span>');
+    setTimeout(function(){
+      $btn.html('<span class="text-sm text-green-600"><i class="fas fa-check mr-2"></i>下载完成</span>');
+      setTimeout(function(){ $btn.html(origHtml); }, 2000);
+    }, 1500);
+  });
+
+  // 相关推荐书籍点击 → 书籍详情
+  $('.related-book, [class*="cursor-pointer"]:has(.fa-book)').on('click', function(){
+    navigateTo('book-detail');
+  });
+  $(document).on('click', '.space-y-3 .cursor-pointer', function(){
+    navigateTo('book-detail');
+  });
+
+  // 推送弹窗函数
+  function showPushModal(deviceName) {
+    const $modal = $(`
+      <div id="push-modal" class="fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4">
+        <div class="bg-white rounded-2xl p-6 w-full max-w-sm shadow-xl">
+          <div class="text-center mb-4">
+            <div class="w-14 h-14 bg-blue-50 rounded-2xl flex items-center justify-center mx-auto mb-3">
+              <i class="fas fa-paper-plane text-primary text-2xl"></i>
+            </div>
+            <h3 class="font-semibold text-gray-800">推送至 ${deviceName}</h3>
+            <p class="text-xs text-gray-400 mt-1">《新加坡史》· MOBI格式</p>
+          </div>
+          <div class="w-full bg-gray-100 rounded-full h-2 mb-2">
+            <div id="push-progress" class="bg-primary h-2 rounded-full transition-all duration-300" style="width:0%"></div>
+          </div>
+          <p id="push-status" class="text-xs text-center text-gray-400 mb-4">准备推送...</p>
+          <button id="push-cancel" class="w-full py-2.5 border border-gray-200 rounded-xl text-sm text-gray-600 hover:bg-gray-50">取消</button>
+        </div>
+      </div>`);
+    $('body').append($modal);
+    let progress = 0;
+    const timer = setInterval(function(){
+      progress += Math.random() * 25;
+      if (progress >= 100) {
+        progress = 100;
+        clearInterval(timer);
+        $('#push-status').text('推送成功！请在设备上查收').css('color','#16a34a');
+        $('#push-progress').css('background','#16a34a');
+        $('#push-cancel').text('完成').on('click', function(){ $modal.remove(); });
+      } else {
+        $('#push-status').text('推送中... ' + Math.round(progress) + '%');
+      }
+      $('#push-progress').css('width', Math.min(progress,100) + '%');
+    }, 400);
+    $('#push-cancel').on('click', function(){ clearInterval(timer); $modal.remove(); });
+  }
+});
+</script>

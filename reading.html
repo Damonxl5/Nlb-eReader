@@ -1,0 +1,418 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>在线阅读 - NLB eReads</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Noto+Serif+SC:wght@400;500;700&display=swap" rel="stylesheet">
+<script>
+tailwind.config = {
+  theme: { extend: { colors: { primary: '#0f4c81' }, fontFamily: { sans: ['Inter','sans-serif'], serif: ['Noto Serif SC','serif'] } } }
+}
+</script>
+<style>
+  body { font-family:'Inter',sans-serif; }
+  .reading-content { font-family:'Noto Serif SC',serif; line-height:1.9; }
+  .toolbar-shadow { box-shadow:0 2px 20px rgba(0,0,0,0.1); }
+  .bottom-bar-shadow { box-shadow:0 -2px 20px rgba(0,0,0,0.08); }
+  .panel-slide { transition:transform 0.3s ease; }
+  .highlight-yellow { background:rgba(255,235,59,0.4); border-radius:2px; }
+  .highlight-blue { background:rgba(33,150,243,0.2); border-radius:2px; }
+  .progress-bar { background:linear-gradient(90deg,#0f4c81,#1a6bb5); }
+  .theme-sepia { background:#f5f0e8; color:#5c4a32; }
+  .theme-night { background:#1a1a2e; color:#c8c8d4; }
+  .theme-white { background:#ffffff; color:#1f2937; }
+</style>
+<script src="nav.js"></script>
+</head>
+<body class="bg-gray-100 min-h-screen flex flex-col">
+
+<!-- Top Toolbar -->
+<div class="bg-white toolbar-shadow sticky top-0 z-50 px-4 py-2.5 flex items-center gap-3">
+  <button class="flex items-center gap-2 text-gray-600 hover:text-primary transition text-sm" data-nav="book-detail">
+    <i class="fas fa-arrow-left"></i>
+    <span class="hidden sm:block">退出阅读</span>
+  </button>
+  <div class="flex-1 text-center">
+    <p class="text-sm font-semibold text-gray-800 truncate">新加坡史</p>
+    <p class="text-xs text-gray-400">第三章：英国殖民统治</p>
+  </div>
+  <div class="flex items-center gap-2">
+    <button class="p-2 text-gray-500 hover:text-primary transition" title="目录">
+      <i class="fas fa-list-ul"></i>
+    </button>
+    <button class="p-2 text-gray-500 hover:text-primary transition" title="书签">
+      <i class="fas fa-bookmark"></i>
+    </button>
+    <button class="p-2 text-gray-500 hover:text-primary transition" title="设置" onclick="toggleSettings()">
+      <i class="fas fa-cog"></i>
+    </button>
+  </div>
+</div>
+
+<!-- Reading Progress Bar -->
+<div class="h-1 bg-gray-200 sticky top-12 z-40">
+  <div class="progress-bar h-full" style="width:65%"></div>
+</div>
+
+<div class="flex flex-1 relative">
+
+  <!-- TOC Sidebar (hidden by default) -->
+  <div id="toc-panel" class="hidden fixed left-0 top-0 h-full w-64 bg-white shadow-xl z-50 overflow-y-auto">
+    <div class="p-4 border-b border-gray-100 flex items-center justify-between">
+      <h3 class="font-semibold text-gray-800">目录</h3>
+      <button onclick="document.getElementById('toc-panel').classList.add('hidden')" class="text-gray-400 hover:text-gray-600">
+        <i class="fas fa-times"></i>
+      </button>
+    </div>
+    <div class="p-3 space-y-1">
+      <div class="px-3 py-2 text-sm text-gray-600 hover:bg-gray-50 rounded-lg cursor-pointer">第一章：史前新加坡</div>
+      <div class="px-3 py-2 text-sm text-gray-600 hover:bg-gray-50 rounded-lg cursor-pointer">第二章：淡马锡时代</div>
+      <div class="px-3 py-2 text-sm font-medium text-primary bg-blue-50 rounded-lg cursor-pointer">第三章：英国殖民统治</div>
+      <div class="px-3 py-2 text-sm text-gray-600 hover:bg-gray-50 rounded-lg cursor-pointer">第四章：日据时期</div>
+      <div class="px-3 py-2 text-sm text-gray-600 hover:bg-gray-50 rounded-lg cursor-pointer">第五章：独立建国</div>
+    </div>
+  </div>
+
+  <!-- Settings Panel -->
+  <div id="settings-panel" class="hidden fixed right-0 top-12 w-72 bg-white shadow-xl z-50 rounded-l-2xl overflow-hidden">
+    <div class="p-4 border-b border-gray-100">
+      <h3 class="font-semibold text-gray-800 text-sm">阅读设置</h3>
+    </div>
+    <div class="p-4 space-y-5">
+      <!-- Font Size -->
+      <div>
+        <p class="text-xs font-medium text-gray-500 mb-2">字体大小</p>
+        <div class="flex items-center gap-3">
+          <button class="w-8 h-8 border border-gray-200 rounded-lg flex items-center justify-center text-gray-600 hover:bg-gray-50">
+            <i class="fas fa-minus text-xs"></i>
+          </button>
+          <div class="flex-1 bg-gray-100 rounded-full h-2">
+            <div class="bg-primary h-2 rounded-full" style="width:50%"></div>
+          </div>
+          <button class="w-8 h-8 border border-gray-200 rounded-lg flex items-center justify-center text-gray-600 hover:bg-gray-50">
+            <i class="fas fa-plus text-xs"></i>
+          </button>
+          <span class="text-sm text-gray-600 w-8 text-center">18</span>
+        </div>
+      </div>
+      <!-- Line Height -->
+      <div>
+        <p class="text-xs font-medium text-gray-500 mb-2">行间距</p>
+        <div class="flex gap-2">
+          <button class="flex-1 py-1.5 border border-gray-200 rounded-lg text-xs text-gray-600 hover:bg-gray-50">紧凑</button>
+          <button class="flex-1 py-1.5 bg-primary text-white rounded-lg text-xs">标准</button>
+          <button class="flex-1 py-1.5 border border-gray-200 rounded-lg text-xs text-gray-600 hover:bg-gray-50">宽松</button>
+        </div>
+      </div>
+      <!-- Theme -->
+      <div>
+        <p class="text-xs font-medium text-gray-500 mb-2">主题</p>
+        <div class="flex gap-2">
+          <button onclick="setTheme('white')" class="flex-1 py-2 bg-white border-2 border-primary rounded-lg text-xs text-gray-700">白天</button>
+          <button onclick="setTheme('sepia')" class="flex-1 py-2 rounded-lg text-xs" style="background:#f5f0e8;color:#5c4a32;border:2px solid transparent">护眼</button>
+          <button onclick="setTheme('night')" class="flex-1 py-2 rounded-lg text-xs" style="background:#1a1a2e;color:#c8c8d4;border:2px solid transparent">夜间</button>
+        </div>
+      </div>
+      <!-- Font -->
+      <div>
+        <p class="text-xs font-medium text-gray-500 mb-2">字体</p>
+        <div class="flex gap-2">
+          <button class="flex-1 py-1.5 bg-primary text-white rounded-lg text-xs">宋体</button>
+          <button class="flex-1 py-1.5 border border-gray-200 rounded-lg text-xs text-gray-600 hover:bg-gray-50">黑体</button>
+          <button class="flex-1 py-1.5 border border-gray-200 rounded-lg text-xs text-gray-600 hover:bg-gray-50">楷体</button>
+        </div>
+      </div>
+      <!-- Special -->
+      <div class="space-y-2">
+        <div class="flex items-center justify-between">
+          <span class="text-xs text-gray-600">语音朗读</span>
+          <button class="w-10 h-5 bg-gray-200 rounded-full relative transition">
+            <span class="absolute left-0.5 top-0.5 w-4 h-4 bg-white rounded-full shadow transition"></span>
+          </button>
+        </div>
+        <div class="flex items-center justify-between">
+          <span class="text-xs text-gray-600">拼音标注</span>
+          <button class="w-10 h-5 bg-gray-200 rounded-full relative transition">
+            <span class="absolute left-0.5 top-0.5 w-4 h-4 bg-white rounded-full shadow transition"></span>
+          </button>
+        </div>
+        <div class="flex items-center justify-between">
+          <span class="text-xs text-gray-600">大字模式</span>
+          <button class="w-10 h-5 bg-primary rounded-full relative transition">
+            <span class="absolute right-0.5 top-0.5 w-4 h-4 bg-white rounded-full shadow transition"></span>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Main Reading Area -->
+  <main id="reading-area" class="flex-1 theme-white">
+    <div class="max-w-2xl mx-auto px-6 py-8">
+      <h2 class="reading-content text-xl font-bold text-gray-900 mb-6 text-center">第三章：英国殖民统治</h2>
+
+      <p class="reading-content text-base text-gray-800 mb-5">
+        1819年，英国东印度公司代表斯坦福·莱佛士爵士登陆新加坡，与柔佛苏丹签订条约，正式将新加坡纳入英国的殖民版图。这一历史性时刻，不仅改变了这座小岛的命运，更深刻影响了整个东南亚地区的政治格局。
+      </p>
+
+      <p class="reading-content text-base text-gray-800 mb-5">
+        莱佛士以其卓越的战略眼光，将新加坡定位为自由贸易港。他废除了原有的贸易税收，吸引了来自中国、印度、马来群岛乃至欧洲的商人纷至沓来。短短数年间，这座原本人口稀少的小渔村，迅速发展成为繁荣的国际贸易中心。
+      </p>
+
+      <div class="my-6 bg-amber-50 border-l-4 border-amber-400 p-4 rounded-r-xl">
+        <p class="reading-content text-sm text-amber-800 italic">
+          "新加坡的地理位置得天独厚，扼守马六甲海峡咽喉，是连接东西方贸易的天然枢纽。"
+        </p>
+        <p class="text-xs text-amber-600 mt-2">—— 斯坦福·莱佛士，1819年</p>
+      </div>
+
+      <p class="reading-content text-base text-gray-800 mb-5">
+        随着贸易的繁荣，新加坡的人口构成也发生了深刻变化。大批华人劳工从中国南方各省涌入，他们带来了各自的方言、习俗与文化，在这片土地上扎根生息。与此同时，印度裔移民、马来人以及欧洲商人也在此聚居，形成了独特的多元文化社会。
+      </p>
+
+      <p class="reading-content text-base text-gray-800 mb-5">
+        殖民政府在城市规划上颇具远见。莱佛士制定了详细的城市分区规划，将不同族群的居住区域加以划分，既保留了各族群的文化特色，又维持了社会秩序。这一规划的痕迹，至今仍可在牛车水、小印度、甘榜格南等历史街区中清晰可见。
+      </p>
+
+      <p class="reading-content text-base text-gray-800 mb-5">
+        然而，殖民统治并非一帆风顺。19世纪末至20世纪初，随着民族意识的觉醒，各族群开始寻求更大的政治权利。华人社会中，受孙中山革命思想影响的进步力量日益活跃；马来人则在伊斯兰复兴运动的推动下，逐渐形成了民族认同意识。
+      </p>
+
+      <!-- Annotation Example -->
+      <p class="reading-content text-base text-gray-800 mb-5">
+        1942年2月15日，<span class="highlight-yellow">日本军队攻陷新加坡</span>，英国殖民统治宣告中断。这一被丘吉尔称为"英国历史上最惨烈的灾难"的事件，深刻动摇了殖民者不可战胜的神话，为日后的独立运动埋下了伏笔。
+      </p>
+
+      <p class="reading-content text-base text-gray-800 mb-5">
+        战后，英国虽然重新恢复了对新加坡的统治，但殖民地的政治生态已发生根本性转变。<span class="highlight-blue">人民行动党的崛起</span>，标志着新加坡本土政治力量的成熟。在李光耀等领导人的带领下，新加坡走上了争取自治、最终独立的道路。
+      </p>
+    </div>
+  </main>
+</div>
+
+<!-- Bottom Bar -->
+<div class="bg-white bottom-bar-shadow sticky bottom-0 z-40 px-4 py-3">
+  <div class="max-w-2xl mx-auto flex items-center gap-4">
+    <!-- Page Navigation -->
+    <button class="w-9 h-9 flex items-center justify-center border border-gray-200 rounded-xl text-gray-500 hover:bg-gray-50 transition flex-shrink-0">
+      <i class="fas fa-chevron-left text-xs"></i>
+    </button>
+
+    <!-- Progress -->
+    <div class="flex-1">
+      <div class="flex items-center justify-between text-xs text-gray-400 mb-1">
+        <span>第 134 页</span>
+        <span class="font-medium text-primary">65%</span>
+        <span>共 456 页</span>
+      </div>
+      <div class="w-full bg-gray-100 rounded-full h-1.5 cursor-pointer">
+        <div class="progress-bar h-1.5 rounded-full" style="width:65%"></div>
+      </div>
+    </div>
+
+    <button class="w-9 h-9 flex items-center justify-center border border-gray-200 rounded-xl text-gray-500 hover:bg-gray-50 transition flex-shrink-0">
+      <i class="fas fa-chevron-right text-xs"></i>
+    </button>
+
+    <!-- Actions -->
+    <div class="flex items-center gap-1 flex-shrink-0">
+      <button class="w-9 h-9 flex items-center justify-center text-gray-500 hover:text-primary transition" title="添加书签">
+        <i class="fas fa-bookmark text-sm"></i>
+      </button>
+      <button class="w-9 h-9 flex items-center justify-center text-gray-500 hover:text-primary transition" title="笔记">
+        <i class="fas fa-pen text-sm"></i>
+      </button>
+      <button class="px-3 py-1.5 bg-primary text-white rounded-lg text-xs font-medium hover:bg-primary-dark transition">
+        续借
+      </button>
+    </div>
+  </div>
+
+  <!-- Borrow Status -->
+  <div class="max-w-2xl mx-auto mt-2 flex items-center justify-between text-xs text-gray-400">
+    <span><i class="fas fa-clock mr-1"></i>借阅剩余 <span class="text-orange-500 font-medium">5天</span></span>
+    <span>跨设备进度已同步 <i class="fas fa-check-circle text-green-500 ml-1"></i></span>
+  </div>
+</div>
+
+<script>
+function toggleSettings() {
+  const panel = document.getElementById('settings-panel');
+  panel.classList.toggle('hidden');
+}
+function setTheme(theme) {
+  const area = document.getElementById('reading-area');
+  area.className = 'flex-1 theme-' + theme;
+}
+</script>
+</body>
+</html>
+<script>
+$(function(){
+  // 全局 data-nav 跳转
+  $(document).on('click','[data-nav]',function(e){ e.preventDefault(); navigateTo($(this).data('nav')); });
+
+  // 退出阅读 → 书籍详情（带确认）
+  $('nav button[data-nav="book-detail"]').on('click', function(e){
+    e.preventDefault();
+    e.stopPropagation();
+    showExitConfirm();
+  });
+
+  // 目录面板开关
+  $('button[title="目录"]').on('click', function(){
+    $('#toc-panel').toggleClass('hidden');
+    $('#settings-panel').addClass('hidden');
+  });
+
+  // 设置面板开关
+  $('button[title="设置"]').on('click', function(){
+    $('#settings-panel').toggleClass('hidden');
+    $('#toc-panel').addClass('hidden');
+  });
+
+  // 点击页面其他区域关闭面板
+  $(document).on('click', function(e){
+    if (!$(e.target).closest('#toc-panel, #settings-panel, button[title="目录"], button[title="设置"]').length) {
+      $('#toc-panel').addClass('hidden');
+      $('#settings-panel').addClass('hidden');
+    }
+  });
+
+  // 目录条目点击 → 更新章节标题
+  $(document).on('click', '#toc-panel .cursor-pointer', function(){
+    const chapter = $(this).text().trim();
+    $('nav .text-xs.text-gray-400').text(chapter);
+    $('#toc-panel').addClass('hidden');
+    showToast('已跳转至：' + chapter);
+  });
+
+  // 书签按钮 toggle
+  $('button[title="书签"], button[title="添加书签"]').on('click', function(){
+    const $icon = $(this).find('i');
+    const isActive = $icon.hasClass('text-primary');
+    $icon.toggleClass('text-gray-500 text-primary');
+    showToast(isActive ? '已取消书签' : '书签已添加');
+  });
+
+  // 笔记按钮 → 弹出笔记框
+  $('button[title="笔记"]').on('click', function(){
+    showNoteModal();
+  });
+
+  // 续借按钮
+  $(document).on('click', 'button:contains("续借")', function(){
+    const $btn = $(this);
+    $btn.html('<i class="fas fa-spinner fa-spin mr-1"></i>').prop('disabled', true);
+    setTimeout(function(){
+      $btn.html('续借成功').css({'background':'#16a34a','color':'#fff'}).prop('disabled', false);
+      $('span:contains("5天")').text('26天').css('color','#16a34a');
+      setTimeout(function(){ $btn.html('续借').css({'background':'','color':''}); }, 3000);
+    }, 1000);
+  });
+
+  // 字体大小调节
+  let fontSize = 18;
+  $(document).on('click', '.fa-minus', function(){
+    fontSize = Math.max(12, fontSize - 2);
+    updateFontSize();
+  });
+  $(document).on('click', '.fa-plus', function(){
+    fontSize = Math.min(28, fontSize + 2);
+    updateFontSize();
+  });
+  function updateFontSize(){
+    $('.reading-content').css('font-size', fontSize + 'px');
+    $(document).find('span:contains("18"), span:contains("' + (fontSize+2) + '"), span:contains("' + (fontSize-2) + '")').filter(function(){
+      return $(this).text().trim().match(/^\d+$/);
+    }).text(fontSize);
+  }
+
+  // 主题切换（覆盖原有 onclick）
+  $(document).on('click', 'button:contains("白天")', function(){ setTheme('white'); updateThemeBtns(this); });
+  $(document).on('click', 'button:contains("护眼")', function(){ setTheme('sepia'); updateThemeBtns(this); });
+  $(document).on('click', 'button:contains("夜间")', function(){ setTheme('night'); updateThemeBtns(this); });
+  function updateThemeBtns(active){
+    $(active).siblings('button').css({'border':'2px solid transparent'});
+    $(active).css({'border':'2px solid #0f4c81'});
+  }
+
+  // 进度条点击跳转
+  $(document).on('click', '.w-full.bg-gray-100.rounded-full.h-1\\.5.cursor-pointer', function(e){
+    const pct = Math.round((e.offsetX / $(this).width()) * 100);
+    $(this).find('.progress-bar').css('width', pct + '%');
+    $('span.font-medium.text-primary').text(pct + '%');
+    const page = Math.round(pct / 100 * 456);
+    $('span:contains("第 ")').text('第 ' + page + ' 页');
+  });
+
+  // 上一页 / 下一页
+  $(document).on('click', '.fa-chevron-left', function(){
+    showToast('已翻至上一页');
+  });
+  $(document).on('click', '.fa-chevron-right', function(){
+    showToast('已翻至下一页');
+  });
+
+  // 语音朗读 toggle
+  $(document).on('change', 'input[type="checkbox"]', function(){
+    const label = $(this).closest('.flex').find('span.text-xs').text();
+    showToast($(this).is(':checked') ? label + ' 已开启' : label + ' 已关闭');
+  });
+
+  // 退出确认弹窗
+  function showExitConfirm(){
+    const $modal = $(`
+      <div id="exit-modal" class="fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4">
+        <div class="bg-white rounded-2xl p-6 w-full max-w-xs shadow-xl text-center">
+          <i class="fas fa-book-open text-primary text-3xl mb-3"></i>
+          <h3 class="font-semibold text-gray-800 mb-1">退出阅读</h3>
+          <p class="text-sm text-gray-500 mb-5">阅读进度已自动保存（65%）</p>
+          <div class="flex gap-3">
+            <button id="exit-cancel" class="flex-1 py-2.5 border border-gray-200 rounded-xl text-sm text-gray-600 hover:bg-gray-50">继续阅读</button>
+            <button id="exit-confirm" class="flex-1 py-2.5 bg-primary text-white rounded-xl text-sm font-medium hover:bg-primary-dark">退出</button>
+          </div>
+        </div>
+      </div>`);
+    $('body').append($modal);
+    $('#exit-cancel').on('click', function(){ $modal.remove(); });
+    $('#exit-confirm').on('click', function(){ $modal.remove(); navigateTo('book-detail'); });
+  }
+
+  // 笔记弹窗
+  function showNoteModal(){
+    const selected = window.getSelection ? window.getSelection().toString() : '';
+    const $modal = $(`
+      <div id="note-modal" class="fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4">
+        <div class="bg-white rounded-2xl p-6 w-full max-w-sm shadow-xl">
+          <h3 class="font-semibold text-gray-800 mb-3 flex items-center gap-2">
+            <i class="fas fa-pen text-primary text-sm"></i>添加笔记
+          </h3>
+          ${selected ? `<div class="bg-yellow-50 border-l-4 border-yellow-400 p-3 rounded-r-xl mb-3 text-sm text-gray-700 italic">"${selected}"</div>` : ''}
+          <textarea id="note-text" class="w-full border border-gray-200 rounded-xl p-3 text-sm resize-none focus:outline-none focus:ring-2 focus:ring-primary/20" rows="4" placeholder="写下你的想法..."></textarea>
+          <div class="flex gap-3 mt-4">
+            <button id="note-cancel" class="flex-1 py-2.5 border border-gray-200 rounded-xl text-sm text-gray-600 hover:bg-gray-50">取消</button>
+            <button id="note-save" class="flex-1 py-2.5 bg-primary text-white rounded-xl text-sm font-medium">保存笔记</button>
+          </div>
+        </div>
+      </div>`);
+    $('body').append($modal);
+    $('#note-cancel').on('click', function(){ $modal.remove(); });
+    $('#note-save').on('click', function(){
+      $modal.remove();
+      showToast('笔记已保存');
+    });
+  }
+
+  // Toast 提示
+  function showToast(msg){
+    const $t = $('<div class="fixed bottom-24 left-1/2 -translate-x-1/2 bg-gray-800 text-white text-xs px-4 py-2 rounded-xl shadow-lg z-50 whitespace-nowrap">' + msg + '</div>');
+    $('body').append($t);
+    setTimeout(function(){ $t.fadeOut(300, function(){ $(this).remove(); }); }, 1800);
+  }
+});
+</script>
