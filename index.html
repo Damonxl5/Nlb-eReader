@@ -105,8 +105,26 @@
     <button class="nav-link" onclick="scrollToSection('s10',this)">
       <i class="fas fa-robot mr-1"></i>AI客服
     </button>
+    <button class="nav-link" onclick="scrollToSection('s11',this)">
+      <i class="fas fa-shield-alt mr-1"></i>管理登录
+    </button>
+    <button class="nav-link" onclick="scrollToSection('s12',this)">
+      <i class="fas fa-chart-line mr-1"></i>管理大盘
+    </button>
+    <button class="nav-link" onclick="scrollToSection('s13',this)">
+      <i class="fas fa-book mr-1"></i>书籍管理
+    </button>
+    <button class="nav-link" onclick="scrollToSection('s14',this)">
+      <i class="fas fa-users mr-1"></i>用户管理
+    </button>
+    <button class="nav-link" onclick="scrollToSection('s15',this)">
+      <i class="fas fa-exchange-alt mr-1"></i>借阅记录
+    </button>
+    <button class="nav-link" onclick="scrollToSection('s16',this)">
+      <i class="fas fa-bullhorn mr-1"></i>系统公告
+    </button>
   </div>
-  <div style="color:#475569;font-size:11px;flex-shrink:0;">10 个页面</div>
+  <div style="color:#475569;font-size:11px;flex-shrink:0;">16 个页面</div>
 </div>
 
 <!-- Page 1: Login -->
@@ -229,9 +247,81 @@
   </div>
 </div>
 
+<!-- Page 11: Admin Login -->
+<div class="page-section" id="s11">
+  <div class="section-label">
+    <div class="section-num">11</div>
+    <span class="section-title">后台管理登录</span>
+    <span class="section-desc">admin-login.html</span>
+  </div>
+  <div class="iframe-wrapper">
+    <iframe src="admin-login.html" height="700" scrolling="auto" onload="autoHeight(this)"></iframe>
+  </div>
+</div>
+
+<!-- Page 12: Admin Dashboard -->
+<div class="page-section" id="s12">
+  <div class="section-label">
+    <div class="section-num">12</div>
+    <span class="section-title">管理大盘</span>
+    <span class="section-desc">admin-dashboard.html</span>
+  </div>
+  <div class="iframe-wrapper">
+    <iframe src="admin-dashboard.html" height="900" scrolling="auto" onload="autoHeight(this)"></iframe>
+  </div>
+</div>
+
+<!-- Page 13: Admin Books -->
+<div class="page-section" id="s13">
+  <div class="section-label">
+    <div class="section-num">13</div>
+    <span class="section-title">书籍管理</span>
+    <span class="section-desc">admin-books.html</span>
+  </div>
+  <div class="iframe-wrapper">
+    <iframe src="admin-books.html" height="900" scrolling="auto" onload="autoHeight(this)"></iframe>
+  </div>
+</div>
+
+<!-- Page 14: Admin Users -->
+<div class="page-section" id="s14">
+  <div class="section-label">
+    <div class="section-num">14</div>
+    <span class="section-title">用户管理</span>
+    <span class="section-desc">admin-users.html</span>
+  </div>
+  <div class="iframe-wrapper">
+    <iframe src="admin-users.html" height="900" scrolling="auto" onload="autoHeight(this)"></iframe>
+  </div>
+</div>
+
+<!-- Page 15: Admin Borrows -->
+<div class="page-section" id="s15">
+  <div class="section-label">
+    <div class="section-num">15</div>
+    <span class="section-title">借阅记录</span>
+    <span class="section-desc">admin-borrows.html</span>
+  </div>
+  <div class="iframe-wrapper">
+    <iframe src="admin-borrows.html" height="900" scrolling="auto" onload="autoHeight(this)"></iframe>
+  </div>
+</div>
+
+<!-- Page 16: Admin Notices -->
+<div class="page-section" id="s16">
+  <div class="section-label">
+    <div class="section-num">16</div>
+    <span class="section-title">系统公告</span>
+    <span class="section-desc">admin-notices.html</span>
+  </div>
+  <div class="iframe-wrapper">
+    <iframe src="admin-notices.html" height="900" scrolling="auto" onload="autoHeight(this)"></iframe>
+  </div>
+</div>
+
 <!-- Footer -->
 <div style="text-align:center;padding:40px 24px;color:#334155;font-size:12px;border-top:1px solid #1e293b;">
-  NLB eReads 高保真原型 · 10 个核心页面 · 基于 Tailwind CSS + Font Awesome
+  NLB eReads 高保真原型 · 16 个核心页面 · 基于 Tailwind CSS + Font Awesome
 </div>
 
 <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
@@ -248,9 +338,11 @@ function autoHeight(iframe) {
 const PAGE_SECTION = {
   login: 's1', home: 's2', search: 's3',
   'book-detail': 's4', reading: 's5', bookshelf: 's6',
-  profile: 's7', help: 's8', devices: 's9', 'ai-chat': 's10'
+  profile: 's7', help: 's8', devices: 's9', 'ai-chat': 's10',
+  'admin-login': 's11', 'admin-dashboard': 's12', 'admin-books': 's13',
+  'admin-users': 's14', 'admin-borrows': 's15', 'admin-notices': 's16'
 };
-const SECTION_NAV = ['s1','s2','s3','s4','s5','s6','s7','s8','s9','s10'];
+const SECTION_NAV = ['s1','s2','s3','s4','s5','s6','s7','s8','s9','s10','s11','s12','s13','s14','s15','s16'];
 
 /**
  * 供 iframe 子页面调用：window.parent.switchPage('home', 'home.html')
@@ -293,7 +385,7 @@ function scrollToSection(id, btn) {
 }
 
 // Auto-highlight nav on scroll
-const sections = ['s1','s2','s3','s4','s5','s6','s7','s8','s9','s10'];
+const sections = ['s1','s2','s3','s4','s5','s6','s7','s8','s9','s10','s11','s12','s13','s14','s15','s16'];
 const navBtns = document.querySelectorAll('.nav-link');
 window.addEventListener('scroll', () => {
   let current = 's1';

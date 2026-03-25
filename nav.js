@@ -23,6 +23,12 @@ const ROUTES = {
   help:        'help.html',
   devices:     'devices.html',
   'ai-chat':   'ai-chat.html',
+  'admin-login':     'admin-login.html',
+  'admin-dashboard': 'admin-dashboard.html',
+  'admin-books':     'admin-books.html',
+  'admin-users':     'admin-users.html',
+  'admin-borrows':   'admin-borrows.html',
+  'admin-notices':   'admin-notices.html',
 };
 
 /**
@@ -102,9 +108,9 @@ $(function () {
         // book-detail / reading 等页面：nav 内只有一行 flex 容器，末尾添加
         $('nav').first().find('> div').first().append($btn);
       } else {
-        // 登录页等无导航栏：右上角固定，不与 FAB 冲突
+        // 登录页等无导航栏：右上角固定，位置下移避免与管理员入口冲突
         $btn.css({
-          position:'fixed', top:'16px', right:'16px', zIndex:9999,
+          position:'fixed', top:'16px', right:'160px', zIndex:9999,
           background:'rgba(255,255,255,0.92)',
           boxShadow:'0 2px 8px rgba(0,0,0,.12)',
           border:'1px solid rgba(255,255,255,0.6)',

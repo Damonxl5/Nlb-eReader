@@ -112,6 +112,7 @@ const I18N = {
     'login.guide': '办证指引',
     'login.copyright': '© 2025 National Library Board Singapore · 版权合规平台',
     'login.countdown': '{n}s 后重发',
+    'login.admin': '管理员入口',
 
     // AI 客服
     'ai.chat.title': 'NLB 智能客服',
@@ -236,6 +237,98 @@ const I18N = {
 
     // 公告弹窗
     'announce.close': '关闭',
+
+    // 管理后台 - 通用
+    'admin.nav.dashboard': '管理大盘',
+    'admin.nav.books': '书籍管理',
+    'admin.nav.users': '用户管理',
+    'admin.nav.borrows': '借阅记录',
+    'admin.nav.notices': '系统公告',
+    'admin.logout': '退出登录',
+    'admin.search.placeholder': '搜索...',
+    'admin.back.to.site': '前台',
+
+    // 管理后台 - 登录
+    'admin.login.title': '管理员登录',
+    'admin.login.subtitle': '国家图书馆电子阅读平台后台管理',
+    'admin.login.account': '管理员账号',
+    'admin.login.account.placeholder': '请输入管理员账号',
+    'admin.login.pwd': '密码',
+    'admin.login.pwd.placeholder': '请输入密码',
+    'admin.login.remember': '记住我',
+    'admin.login.forgot': '忘记密码？',
+    'admin.login.btn': '登录后台系统',
+    'admin.login.back': '返回用户端登录',
+
+    // 管理后台 - 大盘
+    'admin.dash.welcome': '欢迎回来，管理员',
+    'admin.dash.welcome.sub': '今天有 {n} 本新借阅记录，系统运行平稳。',
+    'admin.dash.stat.books': '总书籍数量',
+    'admin.dash.stat.users': '注册用户数',
+    'admin.dash.stat.borrows': '今日借阅量',
+    'admin.dash.stat.overdue': '逾期未还',
+    'admin.dash.recent': '最新借阅动态',
+    'admin.dash.recent.all': '查看全部',
+    'admin.dash.quick': '快捷操作',
+    'admin.dash.quick.add_book': '录入新书',
+    'admin.dash.quick.add_book.desc': '添加电子书资源',
+    'admin.dash.quick.approve': '审批用户',
+    'admin.dash.quick.approve.desc': '待审批注册',
+    'admin.dash.quick.notice': '发布公告',
+    'admin.dash.quick.notice.desc': '系统维护/活动推送',
+
+    // 管理后台 - 书籍管理
+    'admin.books.title': '书籍资源库管理',
+    'admin.books.search.placeholder': '搜索书名、作者、ISBN...',
+    'admin.books.filter.cat': '全部分类',
+    'admin.books.filter.status': '全部状态',
+    'admin.books.add': '录入新书',
+    'admin.books.col.info': '书籍信息',
+    'admin.books.col.cat': '分类/语言',
+    'admin.books.col.total': '副本总量',
+    'admin.books.col.available': '可借阅量',
+    'admin.books.col.status': '状态',
+    'admin.books.col.action': '操作',
+
+    // 管理后台 - 用户管理
+    'admin.users.title': '注册用户管理',
+    'admin.users.search.placeholder': '搜索姓名、邮箱、借书证号...',
+    'admin.users.filter.status': '全部状态',
+    'admin.users.export': '导出用户名单',
+    'admin.users.col.info': '用户信息',
+    'admin.users.col.card': '借书证号',
+    'admin.users.col.time': '注册时间',
+    'admin.users.col.quota': '借阅额度使用',
+    'admin.users.col.status': '账号状态',
+
+    // 管理后台 - 借阅记录
+    'admin.borrows.title': '全站借阅记录',
+    'admin.borrows.search.placeholder': '搜索书名、用户名、借书证...',
+    'admin.borrows.filter.status': '全部状态',
+    'admin.borrows.col.id': '订单编号',
+    'admin.borrows.col.user': '借阅人',
+    'admin.borrows.col.book': '借阅书籍',
+    'admin.borrows.col.time': '起止时间',
+    'admin.borrows.col.renew': '续借',
+    'admin.borrows.col.status': '当前状态',
+    'admin.borrows.action.return': '强制归还',
+
+    // 管理后台 - 公告
+    'admin.notices.title': '全站公告与通知',
+    'admin.notices.list': '已有公告记录',
+    'admin.notices.filter.status': '状态',
+    'admin.notices.filter.date': '日期',
+    'admin.notices.col.time': '发布时间',
+    'admin.notices.col.title': '标题 / 类型',
+    'admin.notices.col.target': '目标受众',
+    'admin.notices.create': '发送新通知',
+    'admin.notices.form.title': '通知标题',
+    'admin.notices.form.title.placeholder': '例如：新版移动端APP发布',
+    'admin.notices.form.type': '公告类型',
+    'admin.notices.form.target': '推送对象',
+    'admin.notices.form.content': '通知正文',
+    'admin.notices.form.content.placeholder': '输入具体通知内容...',
+    'admin.notices.form.submit': '立即发布',
   },
 
   en: {
@@ -345,6 +438,7 @@ const I18N = {
     'login.guide': 'Get a card',
     'login.copyright': '© 2025 National Library Board Singapore',
     'login.countdown': 'Resend in {n}s',
+    'login.admin': 'Admin Portal',
 
     // AI Chat
     'ai.chat.title': 'NLB Smart Assistant',
@@ -469,6 +563,98 @@ const I18N = {
 
     // Announce modal
     'announce.close': 'Close',
+
+    // Admin - Common
+    'admin.nav.dashboard': 'Dashboard',
+    'admin.nav.books': 'Books',
+    'admin.nav.users': 'Users',
+    'admin.nav.borrows': 'Borrowing Logs',
+    'admin.nav.notices': 'System Notices',
+    'admin.logout': 'Sign Out',
+    'admin.search.placeholder': 'Search...',
+    'admin.back.to.site': 'Front-end',
+
+    // Admin - Login
+    'admin.login.title': 'Admin Login',
+    'admin.login.subtitle': 'National Library Board eReads Admin Portal',
+    'admin.login.account': 'Admin Account',
+    'admin.login.account.placeholder': 'Enter admin account',
+    'admin.login.pwd': 'Password',
+    'admin.login.pwd.placeholder': 'Enter password',
+    'admin.login.remember': 'Remember Me',
+    'admin.login.forgot': 'Forgot password?',
+    'admin.login.btn': 'Sign In to Portal',
+    'admin.login.back': 'Back to user login',
+
+    // Admin - Dashboard
+    'admin.dash.welcome': 'Welcome back, Admin',
+    'admin.dash.welcome.sub': 'There are {n} new borrowing records today. The system is stable.',
+    'admin.dash.stat.books': 'Total Books',
+    'admin.dash.stat.users': 'Registered Users',
+    'admin.dash.stat.borrows': 'Today\'s Borrows',
+    'admin.dash.stat.overdue': 'Overdue Returns',
+    'admin.dash.recent': 'Recent Borrowings',
+    'admin.dash.recent.all': 'View All',
+    'admin.dash.quick': 'Quick Actions',
+    'admin.dash.quick.add_book': 'Add New Book',
+    'admin.dash.quick.add_book.desc': 'Add an eBook resource',
+    'admin.dash.quick.approve': 'Approve Users',
+    'admin.dash.quick.approve.desc': 'Pending registrations',
+    'admin.dash.quick.notice': 'Publish Notice',
+    'admin.dash.quick.notice.desc': 'System/Event announcements',
+
+    // Admin - Books
+    'admin.books.title': 'Book Resources Management',
+    'admin.books.search.placeholder': 'Search title, author, ISBN...',
+    'admin.books.filter.cat': 'All Categories',
+    'admin.books.filter.status': 'All Statuses',
+    'admin.books.add': 'Add New Book',
+    'admin.books.col.info': 'Book Info',
+    'admin.books.col.cat': 'Category/Lang',
+    'admin.books.col.total': 'Total Copies',
+    'admin.books.col.available': 'Available Copies',
+    'admin.books.col.status': 'Status',
+    'admin.books.col.action': 'Actions',
+
+    // Admin - Users
+    'admin.users.title': 'Registered Users Management',
+    'admin.users.search.placeholder': 'Search name, email, card no...',
+    'admin.users.filter.status': 'All Statuses',
+    'admin.users.export': 'Export Users List',
+    'admin.users.col.info': 'User Info',
+    'admin.users.col.card': 'Library Card No.',
+    'admin.users.col.time': 'Registration Time',
+    'admin.users.col.quota': 'Quota Used',
+    'admin.users.col.status': 'Account Status',
+
+    // Admin - Borrows
+    'admin.borrows.title': 'Platform Borrowing Logs',
+    'admin.borrows.search.placeholder': 'Search book, user, card no...',
+    'admin.borrows.filter.status': 'All Statuses',
+    'admin.borrows.col.id': 'Order No.',
+    'admin.borrows.col.user': 'Borrower',
+    'admin.borrows.col.book': 'Book Title',
+    'admin.borrows.col.time': 'Period',
+    'admin.borrows.col.renew': 'Renewals',
+    'admin.borrows.col.status': 'Current Status',
+    'admin.borrows.action.return': 'Force Return',
+
+    // Admin - Notices
+    'admin.notices.title': 'System Announcements',
+    'admin.notices.list': 'Notice Records',
+    'admin.notices.filter.status': 'Status',
+    'admin.notices.filter.date': 'Date',
+    'admin.notices.col.time': 'Publish Time',
+    'admin.notices.col.title': 'Title / Type',
+    'admin.notices.col.target': 'Target Audience',
+    'admin.notices.create': 'Create New Notice',
+    'admin.notices.form.title': 'Notice Title',
+    'admin.notices.form.title.placeholder': 'e.g. New mobile app version released',
+    'admin.notices.form.type': 'Notice Type',
+    'admin.notices.form.target': 'Target Audience',
+    'admin.notices.form.content': 'Notice Content',
+    'admin.notices.form.content.placeholder': 'Enter specific notice content...',
+    'admin.notices.form.submit': 'Publish Now',
   }
 };
 
