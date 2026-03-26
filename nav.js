@@ -104,19 +104,39 @@ $(function () {
       if ($bell.length) {
         // 大部分页面：铃铛在右侧 flex 容器里，插入到铃铛前保持对齐
         $bell.before($btn);
-      } else if ($('nav').length) {
-        // book-detail / reading 等页面：nav 内只有一行 flex 容器，末尾添加
-        $('nav').first().find('> div').first().append($btn);
       } else {
-        // 登录页等无导航栏：右上角固定，位置下移避免与管理员入口冲突
-        $btn.css({
-          position:'fixed', top:'16px', right:'160px', zIndex:9999,
-          background:'rgba(255,255,255,0.92)',
-          boxShadow:'0 2px 8px rgba(0,0,0,.12)',
-          border:'1px solid rgba(255,255,255,0.6)',
-          color:'#0f4c81'
-        });
-        $('body').append($btn);
+        const $headerRight = $('.top-header > div').last();
+        if ($headerRight.length) {
+          // admin-books / users / borrows / notices：放在顶部右侧操作区
+          $headerRight.prepend($btn);
+        } else if ($('nav').length) {
+          // book-detail / reading 等页面：nav 内只有一行 flex 容器，末尾添加
+          $('nav').first().find('> div').first().append($btn);
+        } else {
+          // 登录页：与管理员入口并排放在同一行
+          const $adminWrap = $('a[href="admin-login.html"], a[onclick*="admin-login"]').first().parent();
+          if ($adminWrap.length) {
+            $adminWrap.css({ display:'flex', alignItems:'center', gap:'8px' });
+            $btn.css({
+              position:'static',
+              background:'rgba(255,255,255,0.92)',
+              boxShadow:'0 2px 8px rgba(0,0,0,.12)',
+              border:'1px solid rgba(255,255,255,0.6)',
+              color:'#0f4c81'
+            });
+            $adminWrap.prepend($btn);
+          } else {
+            // 其他无导航栏页面兜底：右上角固定
+            $btn.css({
+              position:'fixed', top:'16px', right:'16px', zIndex:9999,
+              background:'rgba(255,255,255,0.92)',
+              boxShadow:'0 2px 8px rgba(0,0,0,.12)',
+              border:'1px solid rgba(255,255,255,0.6)',
+              color:'#0f4c81'
+            });
+            $('body').append($btn);
+          }
+        }
       }
     }
 
