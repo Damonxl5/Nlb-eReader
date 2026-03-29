@@ -23,6 +23,9 @@ tailwind.config = {
 </style>
 <script src="i18n.js"></script>
 <script src="nav.js"></script>
+<script src="api-config.js"></script>
+<script src="api-services.js"></script>
+<script src="profile-integration.js"></script>
 </head>
 <body class="min-h-screen">
 
@@ -49,11 +52,11 @@ tailwind.config = {
     </div>
     <div class="relative z-10 flex items-center gap-5">
       <div class="w-16 h-16 bg-white/20 rounded-2xl flex items-center justify-center flex-shrink-0">
-        <span class="text-white text-2xl font-bold">陈</span>
+        <span class="text-white text-2xl font-bold user-avatar-initial"></span>
       </div>
       <div class="flex-1">
-        <h2 class="text-xl font-bold text-white">陈小明</h2>
-        <p class="text-blue-200 text-sm mt-0.5">借书证号：S1234567A</p>
+        <h2 class="text-xl font-bold text-white" id="profile-name"></h2>
+        <p class="text-blue-200 text-sm mt-0.5" id="profile-card-no"></p>
         <div class="flex items-center gap-3 mt-2">
           <span class="bg-white/20 text-white text-xs px-3 py-1 rounded-full">
             <i class="fas fa-check-circle mr-1"></i>已认证会员
@@ -71,7 +74,7 @@ tailwind.config = {
     <!-- Stats Row -->
     <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 mt-5">
       <div class="bg-white/10 rounded-xl p-3 text-center">
-        <p class="text-xl font-bold text-white">47</p>
+      <p class="text-xl font-bold text-white" id="stat-total-borrowed">0</p>
         <p class="text-blue-200 text-xs mt-0.5">累计借阅</p>
       </div>
       <div class="bg-white/10 rounded-xl p-3 text-center">
@@ -79,11 +82,11 @@ tailwind.config = {
         <p class="text-blue-200 text-xs mt-0.5">阅读时长</p>
       </div>
       <div class="bg-white/10 rounded-xl p-3 text-center">
-        <p class="text-xl font-bold text-white">3</p>
+      <p class="text-xl font-bold text-white" id="stat-reading">0</p>
         <p class="text-blue-200 text-xs mt-0.5">借阅中</p>
       </div>
       <div class="bg-white/10 rounded-xl p-3 text-center">
-        <p class="text-xl font-bold text-white">5/5</p>
+      <p class="text-xl font-bold text-white" id="stat-quota">0/0</p>
         <p class="text-blue-200 text-xs mt-0.5">借阅额度</p>
       </div>
     </div>
@@ -109,7 +112,7 @@ tailwind.config = {
               <span class="text-sm text-gray-700">姓名</span>
             </div>
             <div class="flex items-center gap-2">
-              <span class="text-sm text-gray-500">陈小明</span>
+              <span class="text-sm text-gray-500" id="profile-field-name"></span>
               <i class="fas fa-chevron-right text-gray-300 text-xs"></i>
             </div>
           </div>
@@ -119,7 +122,7 @@ tailwind.config = {
               <span class="text-sm text-gray-700">手机号码</span>
             </div>
             <div class="flex items-center gap-2">
-              <span class="text-sm text-gray-500">+65 9XXX XXXX</span>
+              <span class="text-sm text-gray-500" id="profile-field-phone"></span>
               <i class="fas fa-chevron-right text-gray-300 text-xs"></i>
             </div>
           </div>
@@ -129,7 +132,7 @@ tailwind.config = {
               <span class="text-sm text-gray-700">电子邮件</span>
             </div>
             <div class="flex items-center gap-2">
-              <span class="text-sm text-gray-500">chen***@gmail.com</span>
+              <span class="text-sm text-gray-500" id="profile-field-email"></span>
               <i class="fas fa-chevron-right text-gray-300 text-xs"></i>
             </div>
           </div>
@@ -263,10 +266,10 @@ tailwind.config = {
           <div class="relative w-24 h-24 mx-auto">
             <svg class="w-24 h-24 -rotate-90" viewBox="0 0 36 36">
               <circle cx="18" cy="18" r="15.9" fill="none" stroke="#e5e7eb" stroke-width="3"/>
-              <circle cx="18" cy="18" r="15.9" fill="none" stroke="#0f4c81" stroke-width="3" stroke-dasharray="60 40" stroke-linecap="round"/>
+              <circle id="quota-circle" cx="18" cy="18" r="15.9" fill="none" stroke="#0f4c81" stroke-width="3" stroke-dasharray="0 100" stroke-linecap="round"/>
             </svg>
             <div class="absolute inset-0 flex flex-col items-center justify-center">
-              <span class="text-xl font-bold text-primary">3/5</span>
+              <span class="text-xl font-bold text-primary" id="quota-label">0/0</span>
               <span class="text-xs text-gray-400">已用</span>
             </div>
           </div>
@@ -358,6 +361,8 @@ $(function(){
   // 退出登录 → 确认弹窗
   $('#btn-logout').on('click', function(){
     showConfirm('确认退出登录？', '退出后需重新验证借书证', function(){
+      localStorage.clear();
+      sessionStorage.clear();
       navigateTo('login');
     });
   });

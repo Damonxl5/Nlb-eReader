@@ -25,6 +25,8 @@ tailwind.config = {
 </style>
 <script src="nav.js"></script>
 <script src="i18n.js"></script>
+<script src="api-config.js"></script>
+<script src="api-services.js"></script>
 </head>
 <body class="flex min-h-screen overflow-hidden">
 
@@ -103,7 +105,7 @@ tailwind.config = {
                   <th class="px-6 py-4 text-right" data-i18n="admin.books.col.action">操作</th>
                 </tr>
               </thead>
-              <tbody class="divide-y divide-gray-100 text-sm">
+              <tbody class="divide-y divide-gray-100 text-sm" id="notices-tbody">
                 <tr class="hover:bg-gray-50 transition">
                   <td class="px-6 py-4 text-gray-600">
                     <p>2026-03-24</p>
@@ -226,21 +228,7 @@ tailwind.config = {
 $(function() {
   $(document).on('click','[data-nav]',function(e){ e.preventDefault(); navigateTo($(this).data('nav')); });
 });
-
-function submitNotice() {
-  const $btn = $('#btn-submit');
-  const title = $('#notice-title').val();
-  if(!title) return;
-
-  $btn.html('<i class="fas fa-spinner fa-spin"></i> 发布中...').prop('disabled', true);
-  setTimeout(function() {
-    $btn.html('<i class="fas fa-check"></i> 发布成功').css('background', '#16a34a');
-    setTimeout(function() {
-      alert("新公告已成功推送全站。页面将刷新 (模拟)。");
-      window.location.reload();
-    }, 800);
-  }, 1000);
-}
 </script>
+<script src="admin-notices-integration.js"></script>
 </body>
 </html>

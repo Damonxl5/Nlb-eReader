@@ -10,6 +10,8 @@
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 <script src="i18n.js"></script>
 <script src="nav.js"></script>
+<script src="api-config.js"></script>
+<script src="api-services.js"></script>
 <script>tailwind.config={theme:{extend:{colors:{primary:'#0f4c81','primary-dark':'#0a3560',accent:'#f97316'},fontFamily:{sans:['Inter','sans-serif']}}}}</script>
 <style>
   body{font-family:'Inter',sans-serif;background:#f8fafc;}
@@ -71,11 +73,11 @@
         </button>
         <div class="flex items-center gap-2 cursor-pointer hover:bg-gray-50 rounded-xl px-2 py-1.5 transition" data-nav="profile">
           <div class="w-8 h-8 rounded-full flex items-center justify-center" style="background:#0f4c81">
-            <span class="text-white text-xs font-bold">陈</span>
+            <span class="text-white text-xs font-bold user-avatar-initial"></span>
           </div>
           <div class="hidden sm:block">
-            <p class="text-xs font-medium text-gray-800">陈小明</p>
-            <p class="text-xs text-gray-400">证号 S1234567A</p>
+            <p class="text-xs font-medium text-gray-800 user-name">陈小明</p>
+            <p class="text-xs text-gray-400">证号 <span class="user-card">S1234567A</span></p>
           </div>
         </div>
       </div>
@@ -340,7 +342,7 @@
         <span data-i18n="home.newbooks.more">查看全部</span> <i class="fas fa-chevron-right text-xs"></i>
       </button>
     </div>
-    <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-4">
+    <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-4" id="new-books-container">
       <div class="book-card bg-white rounded-2xl shadow-sm card-hover overflow-hidden" data-nav="book-detail">
         <div class="h-36 flex items-end p-3" style="background:linear-gradient(135deg,#0f4c81,#1a6bb5)">
           <div><p class="text-white font-bold text-xs">新加坡史</p><p class="text-blue-200 text-xs">柯木林</p></div>
@@ -418,7 +420,7 @@
   <div class="grid grid-cols-1 lg:grid-cols-3 gap-5">
     <div class="lg:col-span-2 bg-white rounded-2xl shadow-sm p-5">
       <h3 class="font-bold text-gray-800 text-base mb-4" data-i18n="home.announce.title">公告动态</h3>
-      <div class="space-y-3">
+      <div class="space-y-3" id="notices-container">
         <div class="announce-item flex items-start gap-3 p-3 bg-blue-50 rounded-xl cursor-pointer hover:bg-blue-100 transition"
           data-tag="新书" data-date="2025-03-15"
           data-title="3月新书上架：128本中英文新书已入库"
@@ -462,15 +464,15 @@
       <div class="space-y-3">
         <div class="flex items-center justify-between p-3 bg-gray-50 rounded-xl">
           <span class="text-sm text-gray-600" data-i18n="home.myborrow.active">借阅中</span>
-          <span class="font-bold text-lg" style="color:#0f4c81">3</span>
+          <span class="font-bold text-lg" style="color:#0f4c81" id="stat-borrowing">3</span>
         </div>
         <div class="flex items-center justify-between p-3 bg-red-50 rounded-xl">
           <span class="text-sm text-gray-600" data-i18n="home.myborrow.expiring">即将到期</span>
-          <span class="font-bold text-lg text-red-600">1</span>
+          <span class="font-bold text-lg text-red-600" id="stat-expiring">1</span>
         </div>
         <div class="flex items-center justify-between p-3 bg-gray-50 rounded-xl">
           <span class="text-sm text-gray-600" data-i18n="home.myborrow.quota">剩余额度</span>
-          <span class="font-bold text-lg text-green-600">2/5</span>
+          <span class="font-bold text-lg text-green-600" id="stat-quota">2/5</span>
         </div>
         <button class="w-full py-2.5 text-white rounded-xl text-sm font-medium transition hover:opacity-90" style="background:#0f4c81" data-nav="bookshelf">
           <i class="fas fa-bookmark mr-2"></i><span data-i18n="home.myborrow.manage">管理书架</span>
@@ -706,5 +708,6 @@ function openAnnounce(el) {
   document.body.appendChild(div);
 }
 </script>
+<script src="home-integration.js"></script>
 </body>
 </html>

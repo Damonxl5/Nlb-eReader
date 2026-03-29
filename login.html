@@ -172,6 +172,8 @@ tailwind.config = {
 
 <script src="i18n.js"></script>
 <script src="nav.js"></script>
+<script src="api-config.js"></script>
+<script src="api-services.js"></script>
 <script>
 $(function () {
   // Tab switching
@@ -190,32 +192,98 @@ $(function () {
     $(this).toggleClass('fa-eye fa-eye-slash');
   });
 
-  // Login button → home
-  $('#btn-login, .btn-login-mobile, .btn-login-nlb').on('click', function () {
+  // Card login
+  $('#btn-login').on('click', async function () {
+    const card_no = $('#panel-card input[type="text"]').val().trim();
+    const password = $('#pwd-input').val().trim();
+
+    if (!card_no || !password) {
+      alert('请输入借书证号和密码');
+      return;
+    }
+
+    const $btn = $(this);
+    $btn.prop('disabled', true).html('<i class="fas fa-spinner fa-spin mr-2"></i>登录中...');
+
+    try {
+      const res = await authAPI.loginWithCard(card_no, password);
+      apiClient.setToken(res.data.token);
+      localStorage.setItem('user', JSON.stringify(res.data.user));
+      navigateTo('home');
+    } catch (error) {
+      alert(error.message || '登录失败');
+      $btn.prop('disabled', false).html('<i class="fas fa-sign-in-alt mr-2"></i><span data-i18n="login.btn">登录平台</span>');
+    }
+  });
+
+  // Mobile login
+  $('.btn-login-mobile').on('click', async function () {
+    const phone = $('#panel-mobile input[type="tel"]').val().trim();
+    const code = $('#panel-mobile input[type="text"]').val().trim();
+
+    if (!phone || !code) {
+      alert('请输入手机号和验证码');
+      return;
+    }
+
+    const $btn = $(this);
+    $btn.prop('disabled', true).html('<i class="fas fa-spinner fa-spin mr-2"></i>验证中...');
+
+    try {
+      const res = await authAPI.loginWithMobile(phone, code);
+      apiClient.setToken(res.data.token);
+      localStorage.setItem('user', JSON.stringify(res.data.user));
+      navigateTo('home');
+    } catch (error) {
+      alert(error.message || '登录失败');
+      $btn.prop('disabled', false).html('<i class="fas fa-sign-in-alt mr-2"></i><span data-i18n="login.mobile.btn">验证登录</span>');
+    }
+  });
+
+  // Send OTP
+  $('#btn-send-code').on('click', async function () {
+    const phone = $('#panel-mobile input[type="tel"]').val().trim();
+
+    if (!phone) {
+      alert('请输入手机号');
+      return;
+    }
+
+    try {
+      await authAPI.sendOTP(phone);
+
+      let count = 60;
+      const $btn = $(this);
+      $btn.prop('disabled', true).addClass('opacity-50 cursor-not-allowed');
+      const timer = setInterval(function () {
+        $btn.text(t('login.countdown', {n: count}));
+        count--;
+        if (count < 0) {
+          clearInterval(timer);
+          $btn.text(t('login.mobile.send')).prop('disabled', false).removeClass('opacity-50 cursor-not-allowed');
+        }
+      }, 1000);
+    } catch (error) {
+      alert(error.message || '发送失败');
+    }
+  });
+
+  // QR login
+  $('.btn-login-nlb').on('click', function () {
     navigateTo('home');
   });
 
-  // Send code countdown
-  $('#btn-send-code').on('click', function () {
-    let count = 60;
-    const $btn = $(this);
-    $btn.prop('disabled', true).addClass('opacity-50 cursor-not-allowed');
-    const timer = setInterval(function () {
-      $btn.text(t('login.countdown', {n: count}));
-      count--;
-      if (count < 0) {
-        clearInterval(timer);
-        $btn.text(t('login.mobile.send')).prop('disabled', false).removeClass('opacity-50 cursor-not-allowed');
-      }
-    }, 1000);
-  });
-
   // Refresh QR
-  $('#btn-refresh-qr').on('click', function () {
+  $('#btn-refresh-qr').on('click', async function () {
     $(this).html(`<i class="fas fa-spinner fa-spin mr-1"></i>${t('login.nlb.refreshing')}`);
-    setTimeout(() => {
+    try {
+      await authAPI.getQRCode();
+      setTimeout(() => {
+        $(this).html(`<i class="fas fa-sync-alt mr-1"></i>${t('login.nlb.refresh')}`);
+      }, 1500);
+    } catch (error) {
       $(this).html(`<i class="fas fa-sync-alt mr-1"></i>${t('login.nlb.refresh')}`);
-    }, 1500);
+    }
   });
 });
 </script>

@@ -10,6 +10,8 @@
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 <script src="i18n.js"></script>
 <script src="nav.js"></script>
+<script src="api-config.js"></script>
+<script src="api-services.js"></script>
 <script>tailwind.config={theme:{extend:{colors:{primary:'#0f4c81',accent:'#f97316'},fontFamily:{sans:['Inter','sans-serif']}}}}</script>
 <style>
   body{font-family:'Inter',sans-serif;background:#f8fafc;}
@@ -43,7 +45,7 @@
     <div class="flex items-center gap-2">
       <button class="p-2 text-gray-500 hover:text-primary"><i class="fas fa-bell"></i></button>
       <div class="w-8 h-8 rounded-full flex items-center justify-center cursor-pointer" style="background:#0f4c81" data-nav="profile">
-        <span class="text-white text-xs font-bold">陈</span>
+        <span class="text-white text-xs font-bold user-avatar-initial"></span>
       </div>
     </div>
   </div>
@@ -623,4 +625,6 @@ $(function () {
   });
 });
 </script>
+<script src="search-integration.js"></script>
+</body>
 </html>

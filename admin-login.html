@@ -20,6 +20,8 @@ tailwind.config = {
 </style>
 <script src="nav.js"></script>
 <script src="i18n.js"></script>
+<script src="api-config.js"></script>
+<script src="api-services.js"></script>
 </head>
 <body class="min-h-screen bg-gradient-admin flex items-center justify-center p-4">
 
@@ -101,21 +103,8 @@ function togglePassword() {
 $(function() {
   // 全局 data-nav 跳转
   $(document).on('click','[data-nav]',function(e){ e.preventDefault(); navigateTo($(this).data('nav')); });
-
-  $('#admin-login-form').on('submit', function() {
-    const $btn = $('#btn-login');
-    const origText = $btn.text();
-    $btn.html('<i class="fas fa-spinner fa-spin mr-2"></i>登录中...').prop('disabled', true);
-
-    // Simulate API call
-    setTimeout(function() {
-      $btn.html('<i class="fas fa-check mr-2"></i>登录成功').css('background', '#16a34a');
-      setTimeout(function() {
-        navigateTo('admin-dashboard');
-      }, 600);
-    }, 1000);
-  });
 });
 </script>
+<script src="admin-login-integration.js"></script>
 </body>
 </html>

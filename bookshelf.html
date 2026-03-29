@@ -29,6 +29,8 @@ tailwind.config = {
 <script src="nav.js"></script>
 </head>
 <body class="min-h-screen">
+<script src="api-config.js"></script>
+<script src="api-services.js"></script>
 
 <!-- Nav -->
 <nav class="bg-white nav-shadow sticky top-0 z-50">
@@ -42,7 +44,7 @@ tailwind.config = {
     <div class="flex-1"></div>
     <button class="p-2 text-gray-500 hover:text-primary"><i class="fas fa-bell"></i></button>
     <div class="w-8 h-8 bg-primary rounded-full flex items-center justify-center">
-      <span class="text-white text-xs font-bold">陈</span>
+      <span class="text-white text-xs font-bold user-avatar-initial"></span>
     </div>
   </div>
 </nav>
@@ -56,15 +58,15 @@ tailwind.config = {
     </div>
     <div class="flex items-center gap-3">
       <div class="bg-white rounded-xl px-4 py-2 shadow-sm text-center">
-        <p class="text-lg font-bold text-primary">3</p>
+        <p class="text-lg font-bold text-primary" id="stat-reading">0</p>
         <p class="text-xs text-gray-400">借阅中</p>
       </div>
       <div class="bg-white rounded-xl px-4 py-2 shadow-sm text-center">
-        <p class="text-lg font-bold text-green-600">2</p>
+        <p class="text-lg font-bold text-green-600" id="stat-downloaded">0</p>
         <p class="text-xs text-gray-400">已下载</p>
       </div>
       <div class="bg-white rounded-xl px-4 py-2 shadow-sm text-center">
-        <p class="text-lg font-bold text-orange-500">1</p>
+        <p class="text-lg font-bold text-orange-500" id="stat-urgent">0</p>
         <p class="text-xs text-gray-400">即将到期</p>
       </div>
     </div>
@@ -72,8 +74,8 @@ tailwind.config = {
 
   <!-- Tabs -->
   <div class="flex border-b border-gray-200 mb-5 bg-white rounded-t-2xl px-4 shadow-sm overflow-x-auto scrollbar-hide" id="shelf-tabs">
-    <button onclick="switchShelfTab(this,'borrowing')" class="tab-active py-3 px-4 text-sm">借阅中 <span class="ml-1 bg-primary text-white text-xs px-1.5 py-0.5 rounded-full">3</span></button>
-    <button onclick="switchShelfTab(this,'offline')" class="py-3 px-4 text-sm text-gray-500 hover:text-gray-700">离线下载 <span class="ml-1 bg-gray-200 text-gray-600 text-xs px-1.5 py-0.5 rounded-full">2</span></button>
+    <button onclick="switchShelfTab(this,'borrowing')" class="tab-active py-3 px-4 text-sm">借阅中 <span class="ml-1 bg-primary text-white text-xs px-1.5 py-0.5 rounded-full" id="tab-borrowing-count">0</span></button>
+    <button onclick="switchShelfTab(this,'offline')" class="py-3 px-4 text-sm text-gray-500 hover:text-gray-700">离线下载 <span class="ml-1 bg-gray-200 text-gray-600 text-xs px-1.5 py-0.5 rounded-full" id="tab-offline-count">0</span></button>
     <button onclick="switchShelfTab(this,'collection')" class="py-3 px-4 text-sm text-gray-500 hover:text-gray-700">收藏书单</button>
     <button onclick="switchShelfTab(this,'notes')" class="py-3 px-4 text-sm text-gray-500 hover:text-gray-700">阅读笔记</button>
     <button onclick="switchShelfTab(this,'history')" class="py-3 px-4 text-sm text-gray-500 hover:text-gray-700">借阅历史</button>
@@ -82,115 +84,10 @@ tailwind.config = {
   <!-- Tab: Borrowing -->
   <div id="tab-borrowing">
     <!-- Urgent Warning -->
-    <div class="bg-red-50 border border-red-200 rounded-xl px-4 py-3 mb-4 flex items-center gap-3">
-      <i class="fas fa-exclamation-triangle text-red-500 flex-shrink-0"></i>
-      <p class="text-sm text-red-700"><span class="font-semibold">《活着》</span> 还有 <span class="font-bold">2天</span> 到期，请及时续借或归还</p>
-      <button class="ml-auto flex-shrink-0 bg-red-500 text-white text-xs px-3 py-1.5 rounded-lg hover:bg-red-600 transition">立即续借</button>
-    </div>
+    <div id="urgent-warning" class="bg-red-50 border border-red-200 rounded-xl px-4 py-3 mb-4 flex items-center gap-3 hidden"></div>
 
-    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-      <!-- Book 1 - Urgent -->
-      <div class="bg-white rounded-2xl shadow-sm card-hover overflow-hidden border-2 border-red-200">
-        <div class="flex gap-4 p-4">
-          <div class="w-16 h-22 rounded-xl flex-shrink-0 flex items-end p-2" style="background:linear-gradient(135deg,#dc2626,#f97316)">
-            <p class="text-white text-xs font-bold leading-tight">活着</p>
-          </div>
-          <div class="flex-1 min-w-0">
-            <div class="flex items-start justify-between">
-              <div>
-                <p class="font-semibold text-gray-800 text-sm">活着</p>
-                <p class="text-xs text-gray-400 mt-0.5">余华 著</p>
-              </div>
-              <span class="urgent bg-red-100 text-red-600 text-xs px-2 py-0.5 rounded-full font-medium flex-shrink-0">2天到期</span>
-            </div>
-            <div class="mt-2">
-              <div class="flex items-center justify-between text-xs text-gray-400 mb-1">
-                <span>阅读进度</span>
-                <span class="font-medium text-gray-600">78%</span>
-              </div>
-              <div class="w-full bg-gray-100 rounded-full h-1.5">
-                <div class="progress-bar h-1.5 rounded-full" style="width:78%"></div>
-              </div>
-            </div>
-          </div>
-        </div>
-        <div class="px-4 pb-4 flex gap-2">
-          <button class="flex-1 py-2 bg-primary text-white rounded-xl text-xs font-medium hover:bg-primary-dark transition" data-nav="reading">
-            <i class="fas fa-book-reader mr-1"></i>继续阅读
-          </button>
-          <button class="px-3 py-2 border border-gray-200 rounded-xl text-xs text-gray-600 hover:bg-gray-50 transition">续借</button>
-          <button class="px-3 py-2 border border-gray-200 rounded-xl text-xs text-gray-600 hover:bg-gray-50 transition">归还</button>
-        </div>
-      </div>
-
-      <!-- Book 2 -->
-      <div class="bg-white rounded-2xl shadow-sm card-hover overflow-hidden">
-        <div class="flex gap-4 p-4">
-          <div class="w-16 h-22 rounded-xl flex-shrink-0 flex items-end p-2" style="background:linear-gradient(135deg,#0f4c81,#1a6bb5)">
-            <p class="text-white text-xs font-bold leading-tight">新加坡史</p>
-          </div>
-          <div class="flex-1 min-w-0">
-            <div class="flex items-start justify-between">
-              <div>
-                <p class="font-semibold text-gray-800 text-sm">新加坡史</p>
-                <p class="text-xs text-gray-400 mt-0.5">柯木林 著</p>
-              </div>
-              <span class="bg-blue-100 text-blue-600 text-xs px-2 py-0.5 rounded-full font-medium flex-shrink-0">5天</span>
-            </div>
-            <div class="mt-2">
-              <div class="flex items-center justify-between text-xs text-gray-400 mb-1">
-                <span>阅读进度</span>
-                <span class="font-medium text-gray-600">65%</span>
-              </div>
-              <div class="w-full bg-gray-100 rounded-full h-1.5">
-                <div class="progress-bar h-1.5 rounded-full" style="width:65%"></div>
-              </div>
-            </div>
-          </div>
-        </div>
-        <div class="px-4 pb-4 flex gap-2">
-          <button class="flex-1 py-2 bg-primary text-white rounded-xl text-xs font-medium hover:bg-primary-dark transition" data-nav="reading">
-            <i class="fas fa-book-reader mr-1"></i>继续阅读
-          </button>
-          <button class="px-3 py-2 border border-gray-200 rounded-xl text-xs text-gray-600 hover:bg-gray-50 transition">续借</button>
-          <button class="px-3 py-2 border border-gray-200 rounded-xl text-xs text-gray-600 hover:bg-gray-50 transition">归还</button>
-        </div>
-      </div>
-
-      <!-- Book 3 -->
-      <div class="bg-white rounded-2xl shadow-sm card-hover overflow-hidden">
-        <div class="flex gap-4 p-4">
-          <div class="w-16 h-22 rounded-xl flex-shrink-0 flex items-end p-2" style="background:linear-gradient(135deg,#059669,#10b981)">
-            <p class="text-white text-xs font-bold leading-tight">狮城岁月</p>
-          </div>
-          <div class="flex-1 min-w-0">
-            <div class="flex items-start justify-between">
-              <div>
-                <p class="font-semibold text-gray-800 text-sm">狮城岁月</p>
-                <p class="text-xs text-gray-400 mt-0.5">方修 著</p>
-              </div>
-              <span class="bg-green-100 text-green-600 text-xs px-2 py-0.5 rounded-full font-medium flex-shrink-0">12天</span>
-            </div>
-            <div class="mt-2">
-              <div class="flex items-center justify-between text-xs text-gray-400 mb-1">
-                <span>阅读进度</span>
-                <span class="font-medium text-gray-600">23%</span>
-              </div>
-              <div class="w-full bg-gray-100 rounded-full h-1.5">
-                <div class="progress-bar h-1.5 rounded-full" style="width:23%"></div>
-              </div>
-            </div>
-          </div>
-        </div>
-        <div class="px-4 pb-4 flex gap-2">
-          <button class="flex-1 py-2 bg-primary text-white rounded-xl text-xs font-medium hover:bg-primary-dark transition" data-nav="reading">
-            <i class="fas fa-book-reader mr-1"></i>继续阅读
-          </button>
-          <button class="px-3 py-2 border border-gray-200 rounded-xl text-xs text-gray-600 hover:bg-gray-50 transition">续借</button>
-          <button class="px-3 py-2 border border-gray-200 rounded-xl text-xs text-gray-600 hover:bg-gray-50 transition">归还</button>
-        </div>
-      </div>
-    </div>
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4" id="borrowing-list">
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4" id="borrowing-list"></div>
   </div>
 
   <!-- Tab: Offline -->
@@ -338,32 +235,7 @@ tailwind.config = {
           <option>近半年</option>
         </select>
       </div>
-      <div class="divide-y divide-gray-50">
-        <div class="flex items-center gap-4 p-4 hover:bg-gray-50 transition">
-          <div class="w-10 h-14 rounded-lg flex-shrink-0" style="background:linear-gradient(135deg,#0f4c81,#1a6bb5)"></div>
-          <div class="flex-1">
-            <p class="text-sm font-medium text-gray-800">新加坡史</p>
-            <p class="text-xs text-gray-400 mt-0.5">借阅：2025-03-01 · 归还：借阅中</p>
-          </div>
-          <span class="text-xs bg-blue-100 text-blue-600 px-2 py-1 rounded-full">借阅中</span>
-        </div>
-        <div class="flex items-center gap-4 p-4 hover:bg-gray-50 transition">
-          <div class="w-10 h-14 rounded-lg flex-shrink-0" style="background:linear-gradient(135deg,#7c3aed,#a855f7)"></div>
-          <div class="flex-1">
-            <p class="text-sm font-medium text-gray-800">Crazy Rich Asians</p>
-            <p class="text-xs text-gray-400 mt-0.5">借阅：2025-02-10 · 归还：2025-03-03</p>
-          </div>
-          <span class="text-xs bg-gray-100 text-gray-500 px-2 py-1 rounded-full">已归还</span>
-        </div>
-        <div class="flex items-center gap-4 p-4 hover:bg-gray-50 transition">
-          <div class="w-10 h-14 rounded-lg flex-shrink-0" style="background:linear-gradient(135deg,#be185d,#ec4899)"></div>
-          <div class="flex-1">
-            <p class="text-sm font-medium text-gray-800">从第三世界到第一世界</p>
-            <p class="text-xs text-gray-400 mt-0.5">借阅：2025-01-15 · 归还：2025-02-05</p>
-          </div>
-          <span class="text-xs bg-gray-100 text-gray-500 px-2 py-1 rounded-full">已归还</span>
-        </div>
-      </div>
+      <div class="divide-y divide-gray-50" id="history-list"></div>
     </div>
   </div>
 </div>
@@ -553,3 +425,6 @@ $(function(){
   }
 });
 </script>
+<script src="bookshelf-integration.js"></script>
+</body>
+</html>

@@ -25,6 +25,8 @@ tailwind.config = {
 </style>
 <script src="nav.js"></script>
 <script src="i18n.js"></script>
+<script src="api-config.js"></script>
+<script src="api-services.js"></script>
 </head>
 <body class="flex min-h-screen overflow-hidden">
 
@@ -84,7 +86,7 @@ tailwind.config = {
       <div class="flex items-center gap-3 w-full sm:w-auto">
         <div class="relative flex-1 sm:w-80">
           <i class="fas fa-search absolute left-3 top-1/2 -translate-y-1/2 text-gray-400"></i>
-          <input type="text" data-i18n-placeholder="admin.users.search.placeholder" placeholder="搜索姓名、邮箱、借书证号..." class="w-full pl-10 pr-4 py-2 bg-white border border-gray-200 rounded-xl text-sm focus:ring-2 focus:ring-primary/20 outline-none">
+          <input type="text" id="search-input" data-i18n-placeholder="admin.users.search.placeholder" placeholder="搜索姓名、邮箱、借书证号..." class="w-full pl-10 pr-4 py-2 bg-white border border-gray-200 rounded-xl text-sm focus:ring-2 focus:ring-primary/20 outline-none">
         </div>
         <select class="py-2 px-3 bg-white border border-gray-200 rounded-xl text-sm text-gray-600 outline-none focus:ring-2 focus:ring-primary/20">
           <option data-i18n="admin.users.filter.status">全部状态</option>
@@ -112,7 +114,7 @@ tailwind.config = {
               <th class="px-6 py-4 text-right" data-i18n="admin.books.col.action">操作</th>
             </tr>
           </thead>
-          <tbody class="divide-y divide-gray-100 text-sm">
+          <tbody class="divide-y divide-gray-100 text-sm" id="users-tbody">
             <tr class="hover:bg-gray-50 transition">
               <td class="px-6 py-4">
                 <div class="flex items-center gap-3">
@@ -198,7 +200,7 @@ tailwind.config = {
 
       <!-- Pagination -->
       <div class="px-6 py-4 border-t border-gray-100 flex items-center justify-between">
-        <span class="text-sm text-gray-500">共 12,845 条记录，当前显示 1-3 条</span>
+        <span class="text-sm text-gray-500" id="users-total">共 12,845 条记录，当前显示 1-3 条</span>
         <div class="flex items-center gap-1">
           <button class="w-8 h-8 rounded border border-gray-200 text-gray-400 flex items-center justify-center cursor-not-allowed"><i class="fas fa-chevron-left text-xs"></i></button>
           <button class="w-8 h-8 rounded bg-primary text-white flex items-center justify-center text-sm font-medium">1</button>
@@ -215,19 +217,7 @@ tailwind.config = {
 $(function() {
   $(document).on('click','[data-nav]',function(e){ e.preventDefault(); navigateTo($(this).data('nav')); });
 });
-
-function resetPwd() {
-  if (confirm("确定要向该用户发送密码重置邮件吗？")) {
-    alert("重置链接已发送到用户注册邮箱。");
-  }
-}
-
-function banUser() {
-  const reason = prompt("请输入封禁理由（例如：恶意借阅、账号被盗）:");
-  if (reason) {
-    alert("该账号已被系统锁定。");
-  }
-}
 </script>
+<script src="admin-users-integration.js"></script>
 </body>
 </html>
